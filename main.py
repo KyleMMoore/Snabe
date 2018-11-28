@@ -5,6 +5,7 @@ from settings import Settings
 def run_game():
     pygame.init()
 
+    #settings/constants file
     snabings = Settings()
     screen = pygame.display.set_mode((snabings.screen_width, snabings.screen_height))
     pygame.display.set_caption("Snabe")
