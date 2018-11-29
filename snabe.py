@@ -1,5 +1,5 @@
 import pygame
-
+from body import Body
 
 class Snabe():
     def __init__(self, screen, settings, player_num):
@@ -45,7 +45,7 @@ class Snabe():
         # a list to keep track of body segments
         self.segments = list()
         for x in range(self.score):
-            self.segments.append()
+            self.segments.append(Body(screen, settings, player_num))
 
     def move(self):
         # snabe moves in the direction that the flags indicate
