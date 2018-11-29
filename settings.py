@@ -6,5 +6,5 @@ class Settings():
         # screen settings
         self.screen_width = 800
         self.screen_height = 800
-        self.background_color = (230, 230, 230)
+        self.background_color = (255, 255, 255)
         self.base_speed = .1
