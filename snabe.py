@@ -1,5 +1,5 @@
 import pygame
-from settings import Settings
+
 
 class Snabe():
     def __init__(self, screen, settings, player_num):
@@ -7,6 +7,7 @@ class Snabe():
         self.settings = settings
         self.player_num = player_num
         self.speed = settings.base_speed
+        self.score = 1  # all players will start with base score of 1
 
         # load head sprite, get rect
         if player_num == 1:
@@ -40,6 +41,11 @@ class Snabe():
         self.lastLoc = (self.centerx, self.centery)
         self.isTurning = False
         self.turnType = 'R'
+
+        # a list to keep track of body segments
+        self.segments = list()
+        for x in range(self.score):
+            self.segments.append()
 
     def move(self):
         # snabe moves in the direction that the flags indicate
