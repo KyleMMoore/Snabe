@@ -1,5 +1,5 @@
 import pygame
-
+from body import Body
 
 class Snabe():
     def __init__(self, screen, settings, player_num):
@@ -7,7 +7,7 @@ class Snabe():
         self.settings = settings
         self.player_num = player_num
         self.speed = settings.base_speed
-        self.score = 1  # all players will start with base score of 1
+        self.score = 5  # all players will start with base score of 1
 
         # load head sprite, get rect
         if player_num == 1:
@@ -44,8 +44,8 @@ class Snabe():
 
         # a list to keep track of body segments
         self.segments = list()
-        for x in range(self.score):
-            self.segments.append()
+        for x in range(self.score + 1):
+            self.segments.append(Body(self.screen, self.settings, self, x))
 
     def move(self):
         # snabe moves in the direction that the flags indicate
@@ -64,9 +64,15 @@ class Snabe():
 
         self.drawSnabe(self.player_num)
 
+        for x in self.segments:
+            x.move()
+            x.turn()
+
     def blitme(self):
         # draws snabe head at its current location
         self.screen.blit(self.head_sprite, self.head_rect)
+        for x in self.segments:
+            x.screen.blit(x.segment_sprite, x.segment_rect)
 
     def drawSnabe(self, player_num):
         if player_num == 1:
@@ -87,3 +93,6 @@ class Snabe():
                 self.head_sprite = pygame.image.load("images/blue/blueHeadLT.bmp")
             elif self.moving_right:
                 self.head_sprite = pygame.image.load("images/blue/blueHeadRT.bmp")
+
+    def is_moving(self):
+        return self.moving_up or self.moving_down or self.moving_left or self.moving_right
