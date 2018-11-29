@@ -41,8 +41,6 @@ class Snabe():
         self.isTurning = False
         self.turnType = 'R'
 
-
-
     def move(self):
         # snabe moves in the direction that the flags indicate
         if self.moving_up and self.head_rect.top > 0:
