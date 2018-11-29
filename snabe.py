@@ -9,7 +9,11 @@ class Snabe():
         self.speed = settings.base_speed
 
         # load head sprite, get rect
-        self.head_sprite = pygame.image.load("images/head.bmp")
+        if player_num == 1:
+            self.head_sprite = pygame.image.load("images/green/greenHead.bmp")
+        elif player_num == 2:
+            self.head_sprite = pygame.image.load("images/blue/blueHead.bmp")
+
         self.head_rect = self.head_sprite.get_rect()
         self.screen_rect = screen.get_rect()
 
@@ -17,7 +21,7 @@ class Snabe():
         if player_num == 1:
             self.head_rect.centerx = 100
         else:
-            self.head_rect.centerx = 700
+            self.head_rect.centerx = self.screen_rect.right - 100
         self.head_rect.bottom = self.screen_rect.centery
 
         # float values for centers, allows us to do math easily
@@ -30,6 +34,14 @@ class Snabe():
         self.moving_down = False
         self.moving_left = False
         self.moving_right = False
+
+        # state flags
+        # help track the head
+        self.lastLoc = (self.centerx, self.centery)
+        self.isTurning = False
+        self.turnType = 'R'
+
+
 
     def move(self):
         # snabe moves in the direction that the flags indicate
@@ -46,6 +58,28 @@ class Snabe():
         self.head_rect.centerx = self.centerx
         self.head_rect.centery = self.centery
 
+        self.drawSnabe(self.player_num)
+
     def blitme(self):
         # draws snabe head at its current location
         self.screen.blit(self.head_sprite, self.head_rect)
+
+    def drawSnabe(self, player_num):
+        if player_num == 1:
+            if self.moving_up:
+                self.head_sprite = pygame.image.load("images/green/greenHead.bmp")
+            elif self.moving_down:
+                self.head_sprite = pygame.image.load("images/green/greenHeadDW.bmp")
+            elif self.moving_left:
+                self.head_sprite = pygame.image.load("images/green/greenHeadLT.bmp")
+            elif self.moving_right:
+                self.head_sprite = pygame.image.load("images/green/greenHeadRT.bmp")
+        elif player_num == 2:
+            if self.moving_up:
+                self.head_sprite = pygame.image.load("images/blue/blueHead.bmp")
+            elif self.moving_down:
+                self.head_sprite = pygame.image.load("images/blue/blueHeadDW.bmp")
+            elif self.moving_left:
+                self.head_sprite = pygame.image.load("images/blue/blueHeadLT.bmp")
+            elif self.moving_right:
+                self.head_sprite = pygame.image.load("images/blue/blueHeadRT.bmp")
