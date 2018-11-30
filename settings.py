@@ -7,4 +7,6 @@ class Settings():
         self.screen_width = 1600
         self.screen_height = 800
         self.background_color = (255, 255, 255)
-        self.base_speed = .1
+        self.base_speed = 1
+        self.tick_rate = 60
+        self.game_length = 60
