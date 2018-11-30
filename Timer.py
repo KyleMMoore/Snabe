@@ -9,19 +9,19 @@ class Timer():
 
         self.time = time_left
 
-        self.timer_body = pygame.image.load("images/timerBody.bmp")
+        self.timer_body = pygame.image.load("images/timer/timerBody.bmp")
         self.rect = self.timer_body.get_rect()
 
         self.rect.centerx = self.screen_rect.centerx
         self.rect.top = self.screen_rect.top
 
-        self.left_digit = pygame.image.load("images/timer_0.bmp")
+        self.left_digit = pygame.image.load("images/timer/timer_0.bmp")
         self.left_digit_rect = self.left_digit.get_rect()
 
         self.left_digit_rect.centerx = self.screen_rect.centerx - 15
         self.left_digit_rect.top = self.screen_rect.top + 32
 
-        self.right_digit = pygame.image.load("images/timer_0.bmp")
+        self.right_digit = pygame.image.load("images/timer/timer_0.bmp")
         self.right_digit_rect = self.right_digit.get_rect()
 
         self.right_digit_rect.centerx = self.screen_rect.centerx + 15
@@ -42,18 +42,18 @@ class Timer():
 
     def switch(self, arg):
         switchDict = {
-            0: "images/timer_0.bmp",
-            1: "images/timer_1.bmp",
-            2: "images/timer_2.bmp",
-            3: "images/timer_3.bmp",
-            4: "images/timer_4.bmp",
-            5: "images/timer_5.bmp",
-            6: "images/timer_6.bmp",
-            7: "images/timer_7.bmp",
-            8: "images/timer_8.bmp",
-            9: "images/timer_9.bmp",
+            0: "images/timer/timer_0.bmp",
+            1: "images/timer/timer_1.bmp",
+            2: "images/timer/timer_2.bmp",
+            3: "images/timer/timer_3.bmp",
+            4: "images/timer/timer_4.bmp",
+            5: "images/timer/timer_5.bmp",
+            6: "images/timer/timer_6.bmp",
+            7: "images/timer/timer_7.bmp",
+            8: "images/timer/timer_8.bmp",
+            9: "images/timer/timer_9.bmp",
         }
-        return switchDict.get(arg, lambda: "images/timer_0.bmp")
+        return switchDict.get(arg, lambda: "images/timer/timer_0.bmp")
 
     def blitme(self):
         self.screen.blit(self.timer_body, self.rect)
