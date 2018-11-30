@@ -31,7 +31,6 @@ def run_game():
     while True:
 
         clock.tick(tick_rate)
-
         gf.check_events(snabe1, snabe2)
         gf.update_screen(snabings, screen, snabe1, snabe2, game_timer, food)
 
@@ -40,7 +39,6 @@ def run_game():
 
         if timerThread % game_length == 0:
             game_timer.tick()
-            food.feed()
         if timerThread >=1:
             timerThread-=1
         else:
