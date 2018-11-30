@@ -9,6 +9,7 @@ class Body():
         self.speed = settings.base_speed
         self.head = head
         self.segment_number = segment_number
+        self.is_last_segment = self.segment_number == self.head.score
 
         # store previous segment for future reference
         if self.segment_number == 0:
@@ -40,9 +41,6 @@ class Body():
         self.centery = float(self.rect.centery)
 
         self.lastLoc = (self.centerx, self.centery)
-        self.turning_point_x = -1
-        self.turning_point_y = -1
-        self.new_direction = ""
 
         # movement flags
         self.moving_up = False
@@ -67,66 +65,88 @@ class Body():
         self.rect.centerx = self.centerx
         self.rect.centery = self.centery
 
+        if (self.centerx, self.centery) in self.head.turning_points:
+            self.turn(self.previous_segment.get_direction())
+
         self.drawSegment()
 
     def drawSegment(self):
         if self.head.player_num == 1:
             if self.moving_up or self.moving_down:
-                if self.segment_number == len(self.head.segments()) - 1:
+                if self.is_last_segment:
                     if self.moving_up:
                         self.segment_sprite = pygame.image.load("images/green/greenSnabeTail.bmp")
                     else:
                         self.segment_sprite = pygame.image.load("images/green/greenSnabeTailDT.bmp")
+                    self.rect = self.segment_sprite.get_rect(center=(self.previous_segment.rect.centerx, self.centery))
                 else:
                     self.segment_sprite = pygame.image.load("images/green/greenSnabeBody.bmp")
-            if self.moving_left or self.moving_down:
-                if self.segment_number == len(self.head.segments()) - 1:
+            if self.moving_left or self.moving_right:
+                if self.is_last_segment:
                     if self.moving_left:
                         self.segment_sprite = pygame.image.load("images/green/greenSnabeTailLT.bmp")
                     else:
                         self.segment_sprite = pygame.image.load("images/green/greenSnabeTailRT.bmp")
+                    self.rect = self.segment_sprite.get_rect(center=(self.centerx, self.previous_segment.rect.centery))
                 else:
                     self.segment_sprite = pygame.image.load("images/green/greenSnabeBodyTurned.bmp")
         else:
             if self.moving_up or self.moving_down:
-                self.segment_sprite = pygame.image.load("images/blue/blueSnabeBody.bmp")
+                if self.is_last_segment:
+                    if self.moving_up:
+                        self.segment_sprite = pygame.image.load("images/blue/blueSnabeTail.bmp")
+                    else:
+                        self.segment_sprite = pygame.image.load("images/blue/blueSnabeTailDT.bmp")
+                    self.rect = self.segment_sprite.get_rect(center=(self.previous_segment.rect.centerx, self.centery))
+                else:
+                    self.segment_sprite = pygame.image.load("images/blue/blueSnabeBody.bmp")
             if self.moving_left or self.moving_right:
-                self.segment_sprite = pygame.image.load("images/blue/blueSnabeBodyTurned.bmp")
+                if self.is_last_segment:
+                    if self.moving_left:
+                        self.segment_sprite = pygame.image.load("images/blue/blueSnabeTailLT.bmp")
+                    else:
+                        self.segment_sprite = pygame.image.load("images/blue/blueSnabeTailRT.bmp")
+                    self.rect = self.segment_sprite.get_rect(center=(self.centerx, self.previous_segment.rect.centery))
+                else:
+                    self.segment_sprite = pygame.image.load("images/blue/blueSnabeBodyTurned.bmp")
 
-    def set_turning_point(self, direction, x_pos, y_pos):
-        self.turning_point_x = x_pos
-        self.turning_point_y = y_pos
-        self.new_direction = direction
+    def turn(self, new_direction):
+        if new_direction == "UP":
+            self.moving_up = True
+            self.moving_down = False
+            self.moving_left = False
+            self.moving_right = False
 
-    def turn(self):
-        if self.centerx == self.turning_point_x and self.centery == self.turning_point_y:
-            if self.new_direction == "UP":
-                self.moving_up = True
-                self.moving_down = False
-                self.moving_left = False
-                self.moving_right = False
+        if new_direction == "DOWN":
+            self.moving_up = False
+            self.moving_down = True
+            self.moving_left = False
+            self.moving_right = False
 
-            if self.new_direction == "DOWN":
-                self.moving_up = False
-                self.moving_down = True
-                self.moving_left = False
-                self.moving_right = False
+        if new_direction == "LEFT":
+            self.moving_up = False
+            self.moving_down = False
+            self.moving_left = True
+            self.moving_right = False
 
-            if self.new_direction == "LEFT":
-                self.moving_up = False
-                self.moving_down = False
-                self.moving_left = True
-                self.moving_right = False
+        if new_direction == "RIGHT":
+            self.moving_up = False
+            self.moving_down = False
+            self.moving_left = False
+            self.moving_right = True
 
-            if self.new_direction == "RIGHT":
-                self.moving_up = False
-                self.moving_down = False
-                self.moving_left = False
-                self.moving_right = True
+        if self.is_last_segment:
+            self.head.turning_points.remove((self.centerx, self.centery))
 
-            self.lastLoc = (self.centerx, self.centery)
-            if self.lastLoc == self.previous_segment.lastLoc:
-                pass
+    def get_direction(self):
+        if self.moving_up:
+            return "UP"
+        if self.moving_down:
+            return "DOWN"
+        if self.moving_left:
+            return "LEFT"
+        if self.moving_right:
+            return "RIGHT"
 
 
 

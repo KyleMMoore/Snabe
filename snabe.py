@@ -10,6 +10,7 @@ class Snabe():
         self.speed = settings.base_speed
         self.score = 5  # all players will start with base score of 1
         self.turning_points = list()
+        self.turning_directions = list()
 
         # load head sprite, get rect
         if player_num == 1:
@@ -68,7 +69,6 @@ class Snabe():
 
         for x in self.segments:
             x.move()
-            x.turn()
 
     def blitme(self):
         # draws snabe head at its current location
@@ -101,4 +101,14 @@ class Snabe():
         return self.moving_up or self.moving_down or self.moving_left or self.moving_right
 
     def get_last_turn(self):
-        return self.lastLoc
+        return self.turning_points[-1]
+
+    def get_direction(self):
+        if self.moving_up:
+            return "UP"
+        if self.moving_down:
+            return "DOWN"
+        if self.moving_left:
+            return "LEFT"
+        if self.moving_right:
+            return "RIGHT"
