@@ -26,7 +26,7 @@ def check_events(snabe1, snabe2):
 
                 # tells each segment to turn in this direction if the snabe is moving in a different direction
                 if snabe1_notFirstMove:
-                    snabe1.turning_points.append((snabe1.rect.centerx, snabe1.rect.centery))
+                    snabe1.turns[(snabe1.rect.centerx, snabe1.rect.centery)] = snabe1.get_direction()
                 # used at beginning when snabe isnt moving: starts motion in selected direction
                 else:
                     for x in snabe1.segments:
@@ -42,7 +42,7 @@ def check_events(snabe1, snabe2):
                 snabe1.moving_down = False
 
                 # tells each segment to turn in this direction if the snabe is moving in a different direction
-                snabe1.turning_points.append((snabe1.rect.centerx, snabe1.rect.centery))
+                snabe1.turns[(snabe1.rect.centerx, snabe1.rect.centery)] = snabe1.get_direction()
                 if not snabe1_notFirstMove:
                     for x in snabe1.segments:
                         x.moving_up = True
@@ -54,7 +54,7 @@ def check_events(snabe1, snabe2):
                 snabe1.moving_right = False
 
                 # tells each segment to turn in this direction if the snabe is moving in a different direction
-                snabe1.turning_points.append((snabe1.rect.centerx, snabe1.rect.centery))
+                snabe1.turns[(snabe1.rect.centerx, snabe1.rect.centery)] = snabe1.get_direction()
 
             elif event.key == pygame.K_d and not snabe1.moving_left and not snabe1.moving_right:
                 snabe1.moving_right = True
@@ -63,7 +63,7 @@ def check_events(snabe1, snabe2):
                 snabe1.moving_down = False
 
                 # tells each segment to turn in this direction if the snabe is moving in a different direction
-                snabe1.turning_points.append((snabe1.rect.centerx, snabe1.rect.centery))
+                snabe1.turns[(snabe1.rect.centerx, snabe1.rect.centery)] = snabe1.get_direction()
                 if not snabe1_notFirstMove:
                     for x in snabe1.segments:
                         x.moving_up = True
@@ -76,7 +76,7 @@ def check_events(snabe1, snabe2):
 
                 # tells each segment to turn in this direction if the snabe is moving in a different direction
                 if snabe2_notFirstMove:
-                    snabe2.turning_points.append((snabe2.rect.centerx, snabe2.rect.centery))
+                    snabe2.turns[(snabe2.rect.centerx, snabe2.rect.centery)] = snabe2.get_direction()
                 # used at beginning when snabe isnt moving: starts motion in selected direction
                 else:
                     for x in snabe2.segments:
@@ -92,7 +92,7 @@ def check_events(snabe1, snabe2):
                 snabe2.moving_down = False
 
                 # tells each segment to turn in this direction if the snabe is moving in a different direction
-                snabe2.turning_points.append((snabe2.rect.centerx, snabe2.rect.centery))
+                snabe2.turns[(snabe2.rect.centerx, snabe2.rect.centery)] = snabe2.get_direction()
                 if not snabe2_notFirstMove:
                     for x in snabe2.segments:
                         x.moving_up = True
@@ -104,7 +104,7 @@ def check_events(snabe1, snabe2):
                 snabe2.moving_right = False
 
                 # tells each segment to turn in this direction if the snabe is moving in a different direction
-                snabe2.turning_points.append((snabe2.rect.centerx, snabe2.rect.centery))
+                snabe2.turns[(snabe2.rect.centerx, snabe2.rect.centery)] = snabe2.get_direction()
 
             elif event.key == pygame.K_RIGHT and not snabe2.moving_left and not snabe2.moving_right:
                 snabe2.moving_right = True
@@ -113,7 +113,8 @@ def check_events(snabe1, snabe2):
                 snabe2.moving_down = False
 
                 # tells each segment to turn in this direction if the snabe is moving in a different direction
-                snabe2.turning_points.append((snabe2.rect.centerx, snabe2.rect.centery))
+                snabe2.turns[(snabe2.rect.centerx, snabe2.rect.centery)] = snabe2.get_direction()
+
                 if not snabe2_notFirstMove:
                     for x in snabe2.segments:
                         x.moving_up = True

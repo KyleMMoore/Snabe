@@ -64,9 +64,8 @@ class Body():
         # update the center values that the rect holds with the newly modified float versions
         self.rect.centerx = self.centerx
         self.rect.centery = self.centery
-
-        if (self.centerx, self.centery) in self.head.turning_points:
-            self.turn(self.previous_segment.get_direction())
+        if (self.centerx, self.centery) in self.head.turns:
+            self.turn(self.head.turns[(self.centerx, self.centery)])
 
         self.drawSegment()
 
@@ -136,7 +135,7 @@ class Body():
             self.moving_right = True
 
         if self.is_last_segment:
-            self.head.turning_points.remove((self.centerx, self.centery))
+            del self.head.turns[(self.centerx, self.centery)]
 
     def get_direction(self):
         if self.moving_up:

@@ -9,8 +9,7 @@ class Snabe():
         self.player_num = player_num
         self.speed = settings.base_speed
         self.score = 5  # all players will start with base score of 1
-        self.turning_points = list()
-        self.turning_directions = list()
+        self.turns = dict()
 
         # load head sprite, get rect
         if player_num == 1:
