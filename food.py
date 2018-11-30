@@ -14,4 +14,4 @@ class Food():
         self.isEaten = False
 
     def blitme(self):
-        self.screen.blit(self.food_sprite,self.rect)
+        self.screen.blit(self.food_sprite, self.rect)
