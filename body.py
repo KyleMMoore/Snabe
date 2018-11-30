@@ -1,5 +1,4 @@
 import pygame
-#from snabe import Snabe
 
 
 class Body():
@@ -8,18 +7,20 @@ class Body():
         self.screen_rect = self.screen.get_rect()
         self.settings = settings
         self.speed = settings.base_speed
+        self.head = head
+        self.segment_number = segment_number
         self.turning_point_x = -1
         self.turning_point_y = -1
         self.new_direction = ""
 
         # store previous segment for future reference
-        if segment_number == 0:
+        if self.segment_number == 0:
             self.previous_segment = head
         else:
             self.previous_segment = head.segments[segment_number - 1]
 
         # if this segment is the end piece, give it the end sprite
-        if segment_number == head.score:
+        if self.segment_number == head.score:
             if head.player_num == 1:
                 self.segment_sprite = pygame.image.load("images/green/greenSnabeTail.bmp")
             elif head.player_num == 2:
@@ -32,18 +33,14 @@ class Body():
             elif head.player_num == 2:
                 self.segment_sprite = pygame.image.load("images/blue/blueSnabeBody.bmp")
 
-        self.segment_rect = self.segment_sprite.get_rect()
+        self.rect = self.segment_sprite.get_rect()
 
-        if self.previous_segment == head:
-            self.segment_rect.top = self.previous_segment.head_rect.bottom
-            self.segment_rect.centerx = self.previous_segment.head_rect.centerx
-        else:
-            self.segment_rect.top = self.previous_segment.segment_rect.bottom
-            self.segment_rect.centerx = self.previous_segment.segment_rect.centerx
+        self.rect.top = self.previous_segment.rect.bottom
+        self.rect.centerx = self.previous_segment.rect.centerx
 
         # float values for centers, allows us to do math easily
-        self.centerx = float(self.segment_rect.centerx)
-        self.centery = float(self.segment_rect.centery)
+        self.centerx = float(self.rect.centerx)
+        self.centery = float(self.rect.centery)
 
         # movement flags
         self.moving_up = False
@@ -52,19 +49,21 @@ class Body():
         self.moving_right = False
 
     def move(self):
-        # snabe moves in the direction that the flags indicate
-        if self.moving_up and self.segment_rect.top > 0:
-            self.centery -= self.speed
-        if self.moving_down and self.segment_rect.bottom < self.screen_rect.bottom:
-            self.centery += self.speed
-        if self.moving_left and self.segment_rect.left > 0:
-            self.centerx -= self.speed
-        if self.moving_right and self.segment_rect.right < self.screen_rect.right:
-            self.centerx += self.speed
+        if self.head.is_moving():
+            if self.moving_up:
+                self.centery -= self.speed
+            if self.moving_down:
+                self.centery += self.speed
+            if self.moving_left:
+                self.centerx -= self.speed
+            if self.moving_right:
+                self.centerx += self.speed
+        else:
+            self.moving_up = self.moving_down = self.moving_left = self.moving_right = False
 
         # update the center values that the rect holds with the newly modified float versions
-        self.segment_rect.centerx = self.centerx
-        self.segment_rect.centery = self.centery
+        self.rect.centerx = self.centerx
+        self.rect.centery = self.centery
 
     def set_turning_point(self, direction, x_pos, y_pos):
         self.turning_point_x = x_pos
@@ -72,7 +71,7 @@ class Body():
         self.new_direction = direction
 
     def turn(self):
-        if self.segment_rect.centerx == self.turning_point_x and self.segment_rect.centery == self.turning_point_y:
+        if self.rect.centerx == self.turning_point_x and self.rect.centery == self.turning_point_y:
             if self.new_direction == "UP":
                 self.moving_up = True
                 self.moving_down = False
@@ -97,8 +96,8 @@ class Body():
                 self.moving_left = False
                 self.moving_right = True
 
-            self.turning_point_x = -1
-            self.turning_point_y = -1
+
+
 
 
 
