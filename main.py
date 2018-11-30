@@ -19,7 +19,7 @@ def run_game():
     snabe1 = Snabe(screen, snabings, 1)
     snabe2 = Snabe(screen, snabings, 2)
 
-    food_spawn = Food(screen)
+    food = Food(screen)
 
     game_timer = Timer(screen, snabings.game_length)
     clock = pygame.time.Clock()
@@ -33,13 +33,14 @@ def run_game():
         clock.tick(tick_rate)
 
         gf.check_events(snabe1, snabe2)
-        gf.update_screen(snabings, screen, snabe1, snabe2, game_timer, food_spawn)
+        gf.update_screen(snabings, screen, snabe1, snabe2, game_timer, food)
 
         snabe1.move()
         snabe2.move()
 
         if timerThread % game_length == 0:
             game_timer.tick()
+            food.feed()
         if timerThread >=1:
             timerThread-=1
         else:
