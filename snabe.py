@@ -9,6 +9,7 @@ class Snabe():
         self.player_num = player_num
         self.speed = settings.base_speed
         self.score = 5  # all players will start with base score of 1
+        self.turning_points = list()
 
         # load head sprite, get rect
         if player_num == 1:
@@ -63,7 +64,7 @@ class Snabe():
         self.rect.centerx = self.centerx
         self.rect.centery = self.centery
 
-        self.drawSnabe(self.player_num)
+        self.drawSnabe()
 
         for x in self.segments:
             x.move()
@@ -75,8 +76,8 @@ class Snabe():
         for x in self.segments:
             x.screen.blit(x.segment_sprite, x.rect)
 
-    def drawSnabe(self, player_num):
-        if player_num == 1:
+    def drawSnabe(self):
+        if self.player_num == 1:
             if self.moving_up:
                 self.head_sprite = pygame.image.load("images/green/greenHead.bmp")
             elif self.moving_down:
@@ -85,7 +86,7 @@ class Snabe():
                 self.head_sprite = pygame.image.load("images/green/greenHeadLT.bmp")
             elif self.moving_right:
                 self.head_sprite = pygame.image.load("images/green/greenHeadRT.bmp")
-        elif player_num == 2:
+        elif self.player_num == 2:
             if self.moving_up:
                 self.head_sprite = pygame.image.load("images/blue/blueHead.bmp")
             elif self.moving_down:
@@ -98,3 +99,6 @@ class Snabe():
 
     def is_moving(self):
         return self.moving_up or self.moving_down or self.moving_left or self.moving_right
+
+    def get_last_turn(self):
+        return self.lastLoc

@@ -16,4 +16,4 @@ class Food():
     def feed(self):
         self.blitme()
     def blitme(self):
-        self.screen.blit(self.food_sprite,self.rect)
+        self.screen.blit(self.food_sprite, self.rect)

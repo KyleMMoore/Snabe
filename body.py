@@ -9,9 +9,6 @@ class Body():
         self.speed = settings.base_speed
         self.head = head
         self.segment_number = segment_number
-        self.turning_point_x = -1
-        self.turning_point_y = -1
-        self.new_direction = ""
 
         # store previous segment for future reference
         if self.segment_number == 0:
@@ -42,6 +39,11 @@ class Body():
         self.centerx = float(self.rect.centerx)
         self.centery = float(self.rect.centery)
 
+        self.lastLoc = (self.centerx, self.centery)
+        self.turning_point_x = -1
+        self.turning_point_y = -1
+        self.new_direction = ""
+
         # movement flags
         self.moving_up = False
         self.moving_down = False
@@ -65,13 +67,39 @@ class Body():
         self.rect.centerx = self.centerx
         self.rect.centery = self.centery
 
+        self.drawSegment()
+
+    def drawSegment(self):
+        if self.head.player_num == 1:
+            if self.moving_up or self.moving_down:
+                if self.segment_number == len(self.head.segments()) - 1:
+                    if self.moving_up:
+                        self.segment_sprite = pygame.image.load("images/green/greenSnabeTail.bmp")
+                    else:
+                        self.segment_sprite = pygame.image.load("images/green/greenSnabeTailDT.bmp")
+                else:
+                    self.segment_sprite = pygame.image.load("images/green/greenSnabeBody.bmp")
+            if self.moving_left or self.moving_down:
+                if self.segment_number == len(self.head.segments()) - 1:
+                    if self.moving_left:
+                        self.segment_sprite = pygame.image.load("images/green/greenSnabeTailLT.bmp")
+                    else:
+                        self.segment_sprite = pygame.image.load("images/green/greenSnabeTailRT.bmp")
+                else:
+                    self.segment_sprite = pygame.image.load("images/green/greenSnabeBodyTurned.bmp")
+        else:
+            if self.moving_up or self.moving_down:
+                self.segment_sprite = pygame.image.load("images/blue/blueSnabeBody.bmp")
+            if self.moving_left or self.moving_right:
+                self.segment_sprite = pygame.image.load("images/blue/blueSnabeBodyTurned.bmp")
+
     def set_turning_point(self, direction, x_pos, y_pos):
         self.turning_point_x = x_pos
         self.turning_point_y = y_pos
         self.new_direction = direction
 
     def turn(self):
-        if self.rect.centerx == self.turning_point_x and self.rect.centery == self.turning_point_y:
+        if self.centerx == self.turning_point_x and self.centery == self.turning_point_y:
             if self.new_direction == "UP":
                 self.moving_up = True
                 self.moving_down = False
@@ -95,6 +123,12 @@ class Body():
                 self.moving_down = False
                 self.moving_left = False
                 self.moving_right = True
+
+            self.lastLoc = (self.centerx, self.centery)
+            if self.lastLoc == self.previous_segment.lastLoc:
+                pass
+
+
 
 
 
