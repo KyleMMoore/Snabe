@@ -1,0 +1,26 @@
+import sys
+import pygame
+from Timer import Timer
+
+def run_game():
+    pygame.init()
+
+    screen = pygame.display.set_mode((800,800))
+    pygame.display.set_caption("Timer Tester")
+
+    game_clock = pygame.time.Clock()
+
+    gameTime = 20
+    timer = Timer(screen, gameTime)
+
+    while True:
+        game_clock.tick(1)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                sys.exit()
+        screen.fill((255,255,255))
+        timer.blitme()
+        pygame.display.flip()
+        timer.tick()
+
+run_game()
