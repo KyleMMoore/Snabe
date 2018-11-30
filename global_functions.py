@@ -1,11 +1,12 @@
 import sys
 import pygame
 
-def update_screen(snabings, screen, snabe1, snabe2, timer):
+def update_screen(snabings, screen, snabe1, snabe2, timer, food):
     screen.fill(snabings.background_color)
     snabe1.blitme()
     snabe2.blitme()
     timer.blitme()
+    food.blitme()
 
     pygame.display.flip()
 

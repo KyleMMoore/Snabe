@@ -33,8 +33,7 @@ def run_game():
         clock.tick(tick_rate)
 
         gf.check_events(snabe1, snabe2)
-        food_spawn.blitme()
-        gf.update_screen(snabings, screen, snabe1, snabe2, game_timer)
+        gf.update_screen(snabings, screen, snabe1, snabe2, game_timer, food_spawn)
 
         snabe1.move()
         snabe2.move()
