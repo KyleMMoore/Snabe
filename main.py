@@ -40,7 +40,6 @@ def run_game():
 
         if timerThread % game_length == 0:
             game_timer.tick()
-            food.feed()
         if timerThread >=1:
             timerThread-=1
         else:
