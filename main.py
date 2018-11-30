@@ -41,6 +41,7 @@ def run_game():
         if timerThread % game_length == 0:
             game_timer.tick()
         if timerThread >=1:
+            food.feed()
             timerThread-=1
         else:
             timerThread = 0
