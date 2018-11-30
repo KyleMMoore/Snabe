@@ -3,6 +3,8 @@ import pygame
 from settings import Settings
 from snabe import Snabe
 from Timer import Timer
+from food import Food
+
 import global_functions as gf
 from threading import Thread
 
@@ -17,6 +19,8 @@ def run_game():
     snabe1 = Snabe(screen, snabings, 1)
     snabe2 = Snabe(screen, snabings, 2)
 
+    food_spawn = Food(screen)
+
     game_timer = Timer(screen, snabings.game_length)
     clock = pygame.time.Clock()
 
@@ -25,11 +29,16 @@ def run_game():
     game_length = snabings.game_length
 
     while True:
+
         clock.tick(tick_rate)
+
         gf.check_events(snabe1, snabe2)
+        food_spawn.blitme()
         gf.update_screen(snabings, screen, snabe1, snabe2, game_timer)
+
         snabe1.move()
         snabe2.move()
+
         if timerThread % game_length == 0:
             game_timer.tick()
         if timerThread >=1:
