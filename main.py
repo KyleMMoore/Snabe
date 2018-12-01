@@ -19,29 +19,53 @@ def run_game():
     snabe1 = Snabe(screen, snabings, 1)
     snabe2 = Snabe(screen, snabings, 2)
 
-    food = Food(screen)
+    # list of food pellets to be displayed
+    food = [Food(screen)]
 
+    # timer class object
     game_timer = Timer(screen, snabings.game_length)
+
+    #established to regulate game speed
     clock = pygame.time.Clock()
 
+    # stores total number of ticks required for the length of game
     timerThread = snabings.game_length * snabings.tick_rate
+
+    # global tick rate established in settings.py
     tick_rate = snabings.tick_rate
+
+    # length to be displayed on timer
     game_length = snabings.game_length
 
-    while True:
+    # keeps track of each timer tick
+    # starts at -1 because timer starts at 0
+    timer_ticks = -1
 
+    while True:
+        # establishes tick rate for game
         clock.tick(tick_rate)
+
         gf.check_events(snabe1, snabe2)
         gf.update_screen(snabings, screen, snabe1, snabe2, game_timer, food)
 
         snabe1.move()
         snabe2.move()
 
+        # regulates when the timer should tick in accordance
+        # to game tick rate
         if timerThread % game_length == 0:
             game_timer.tick()
+            timer_ticks +=1
         if timerThread >=1:
             timerThread-=1
         else:
             timerThread = 0
+            sys.exit()
+
+        # this segment is respoinsible for spawning food
+        # ever 5 seconds
+        if timer_ticks == 5:
+            food.append(Food(screen))
+            timer_ticks = 0
 
 run_game()
