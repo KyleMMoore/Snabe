@@ -6,8 +6,10 @@ def update_screen(snabings, screen, snabe1, snabe2, timer, food, wafer):
     snabe1.blitme()
     snabe2.blitme()
     timer.blitme()
+    # blits everything in food list
     for a in food:
         a.blitme()
+    # blits everything in wafer list
     for b in wafer:
         b.blitme()
 
