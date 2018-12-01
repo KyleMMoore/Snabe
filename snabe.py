@@ -12,16 +12,21 @@ class Snabe():
         self.turns = dict()
 
         # load head sprite, get rect
-        if player_num == 1:
-            self.head_sprite = pygame.image.load("images/green/greenHead.bmp")
-        elif player_num == 2:
-            self.head_sprite = pygame.image.load("images/blue/blueHead.bmp")
+        try:
+            if self.player_num == 1:
+                self.head_sprite = pygame.image.load("images/green/greenHead.bmp")
+            elif self.player_num == 2:
+                self.head_sprite = pygame.image.load("images/blue/blueHead.bmp")
+        except:
+            print("Failed to load head sprite for player " + self.player_num + ": falling back on dummy.bmp")
+            self.head_sprite = pygame.image.load("images/dummy.bmp")
+        finally:
+            self.rect = self.head_sprite.get_rect()
 
-        self.rect = self.head_sprite.get_rect()
         self.screen_rect = screen.get_rect()
 
         # set locations: both will be in the same y plane, but x plane will depend on player_num
-        if player_num == 1:
+        if self.player_num == 1:
             self.rect.centerx = 100
         else:
             self.rect.centerx = self.screen_rect.right - 100

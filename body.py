@@ -18,18 +18,18 @@ class Body():
             self.previous_segment = head.segments[segment_number - 1]
 
         # if this segment is the end piece, give it the end sprite
-        if self.segment_number == head.score:
-            if head.player_num == 1:
-                self.segment_sprite = pygame.image.load("images/green/greenSnabeTail.bmp")
-            elif head.player_num == 2:
-                self.segment_sprite = pygame.image.load("images/blue/blueSnabeTail.bmp")
+        if self.is_last_segment:
+            if self.head.player_num == 1:
+                self.segment_sprite = pygame.image.load("images/green/SnabeTail.bmp")
+            elif self.head.player_num == 2:
+                self.segment_sprite = pygame.image.load("images/blue/SnabeTail.bmp")
 
         # otherwise give it a body sprite
         else:
-            if head.player_num == 1:
-                self.segment_sprite = pygame.image.load("images/green/greenSnabeBody.bmp")
-            elif head.player_num == 2:
-                self.segment_sprite = pygame.image.load("images/blue/blueSnabeBody.bmp")
+            if self.head.player_num == 1:
+                self.segment_sprite = pygame.image.load("images/green/SnabeBody.bmp")
+            elif self.head.player_num == 2:
+                self.segment_sprite = pygame.image.load("images/blue/SnabeBody.bmp")
 
         self.rect = self.segment_sprite.get_rect()
 
@@ -58,56 +58,16 @@ class Body():
                 self.centerx -= self.speed
             if self.moving_right:
                 self.centerx += self.speed
+
+            # update the center values that the rect holds with the newly modified float versions
+            self.rect.centerx = self.centerx
+            self.rect.centery = self.centery
+            self.lastLoc = (self.centerx, self.centery)
+            self.drawSegment()
+            if self.lastLoc in self.head.turns:
+                self.turn(self.head.turns[self.lastLoc])
         else:
             self.moving_up = self.moving_down = self.moving_left = self.moving_right = False
-
-        # update the center values that the rect holds with the newly modified float versions
-        self.rect.centerx = self.centerx
-        self.rect.centery = self.centery
-        if (self.centerx, self.centery) in self.head.turns:
-            self.turn(self.head.turns[(self.centerx, self.centery)])
-
-        self.drawSegment()
-
-    def drawSegment(self):
-        if self.head.player_num == 1:
-            if self.moving_up or self.moving_down:
-                if self.is_last_segment:
-                    if self.moving_up:
-                        self.segment_sprite = pygame.image.load("images/green/greenSnabeTail.bmp")
-                    else:
-                        self.segment_sprite = pygame.image.load("images/green/greenSnabeTailDT.bmp")
-                    self.rect = self.segment_sprite.get_rect(center=(self.previous_segment.rect.centerx, self.centery))
-                else:
-                    self.segment_sprite = pygame.image.load("images/green/greenSnabeBody.bmp")
-            if self.moving_left or self.moving_right:
-                if self.is_last_segment:
-                    if self.moving_left:
-                        self.segment_sprite = pygame.image.load("images/green/greenSnabeTailLT.bmp")
-                    else:
-                        self.segment_sprite = pygame.image.load("images/green/greenSnabeTailRT.bmp")
-                    self.rect = self.segment_sprite.get_rect(center=(self.centerx, self.previous_segment.rect.centery))
-                else:
-                    self.segment_sprite = pygame.image.load("images/green/greenSnabeBodyTurned.bmp")
-        else:
-            if self.moving_up or self.moving_down:
-                if self.is_last_segment:
-                    if self.moving_up:
-                        self.segment_sprite = pygame.image.load("images/blue/blueSnabeTail.bmp")
-                    else:
-                        self.segment_sprite = pygame.image.load("images/blue/blueSnabeTailDT.bmp")
-                    self.rect = self.segment_sprite.get_rect(center=(self.previous_segment.rect.centerx, self.centery))
-                else:
-                    self.segment_sprite = pygame.image.load("images/blue/blueSnabeBody.bmp")
-            if self.moving_left or self.moving_right:
-                if self.is_last_segment:
-                    if self.moving_left:
-                        self.segment_sprite = pygame.image.load("images/blue/blueSnabeTailLT.bmp")
-                    else:
-                        self.segment_sprite = pygame.image.load("images/blue/blueSnabeTailRT.bmp")
-                    self.rect = self.segment_sprite.get_rect(center=(self.centerx, self.previous_segment.rect.centery))
-                else:
-                    self.segment_sprite = pygame.image.load("images/blue/blueSnabeBodyTurned.bmp")
 
     def turn(self, new_direction):
         if new_direction == "UP":
@@ -146,6 +106,61 @@ class Body():
             return "LEFT"
         if self.moving_right:
             return "RIGHT"
+
+    def drawSegment(self):
+        sprite_path = "images/"
+        if self.head.player_num == 1:
+            sprite_path += "green/"
+        else:
+            sprite_path += "blue/"
+
+        if self.is_last_segment:
+            if self.moving_up:
+                sprite_path += "SnabeTail.bmp"
+            elif self.moving_down:
+                sprite_path += "SnabeTailDT.bmp"
+            elif self.moving_left:
+                sprite_path += "SnabeTailLT.bmp"
+            else:
+                sprite_path += "SnabeTailRT.bmp"
+        else:
+            if self.lastLoc in self.head.turns:
+                new_direction = self.head.turns[self.lastLoc]
+                if self.moving_up:
+                    if new_direction == "LEFT":
+                        sprite_path += "SnabeTurnRD.bmp"
+                    elif new_direction == "RIGHT":
+                        sprite_path += "SnabeTurnLD.bmp"
+                elif self.moving_down:
+                    if new_direction == "LEFT":
+                        sprite_path += "SnabeTurnRU.bmp"
+                    elif new_direction == "RIGHT":
+                        sprite_path += "SnabeTurnLU.bmp"
+                elif self.moving_left:
+                    if new_direction == "UP":
+                        sprite_path += "SnabeTurnLU.bmp"
+                    elif new_direction == "DOWN":
+                        sprite_path += "SnabeTurnLD.bmp"
+                elif self.moving_right:
+                    if new_direction == "UP":
+                        sprite_path += "SnabeTurnRU.bmp"
+                    elif new_direction == "DOWN":
+                        sprite_path += "SnabeTurnRD.bmp"
+            else:
+                if self.moving_up or self.moving_down:
+                    sprite_path += "SnabeBody.bmp"
+                else:
+                    sprite_path += "SnabeBodyTurned.bmp"
+
+        try:
+            self.segment_sprite = pygame.image.load(sprite_path)
+        except:
+            print("Error loading sprite at '" + sprite_path + "': falling back on dummy.bmp")
+            self.segment_sprite = pygame.image.load("images/dummy.bmp")
+        finally:
+            self.rect = self.segment_sprite.get_rect(center=self.lastLoc)
+
+
 
 
 
