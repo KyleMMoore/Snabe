@@ -4,6 +4,7 @@ from settings import Settings
 from snabe import Snabe
 from Timer import Timer
 from food import Food
+from wafer import Wafer
 
 import global_functions as gf
 from threading import Thread
@@ -22,6 +23,10 @@ def run_game():
     # list of food pellets to be displayed
     food = [Food(screen)]
 
+    # list of power-ups to be displayed
+    # initial start-up does NOT spawn wafer
+    wafer = []
+
     # timer class object
     game_timer = Timer(screen, snabings.game_length)
 
@@ -39,14 +44,18 @@ def run_game():
 
     # keeps track of each timer tick
     # starts at -1 because timer starts at 0
-    timer_ticks = -1
+    food_ticks = -1
+
+    # keeps track of each timer tick
+    # in relevance to power-up spawns
+    wafer_ticks = -1
 
     while True:
         # establishes tick rate for game
         clock.tick(tick_rate)
 
         gf.check_events(snabe1, snabe2)
-        gf.update_screen(snabings, screen, snabe1, snabe2, game_timer, food)
+        gf.update_screen(snabings, screen, snabe1, snabe2, game_timer, food, wafer)
 
         snabe1.move()
         snabe2.move()
@@ -55,17 +64,24 @@ def run_game():
         # to game tick rate
         if timerThread % game_length == 0:
             game_timer.tick()
-            timer_ticks +=1
+            food_ticks +=1
+            wafer_ticks +=1
         if timerThread >=1:
             timerThread-=1
         else:
             timerThread = 0
             sys.exit()
 
-        # this segment is respoinsible for spawning food
+        # this segment is responsible for spawning food
         # ever 5 seconds
-        if timer_ticks == 5:
+        if food_ticks == 5:
             food.append(Food(screen))
-            timer_ticks = 0
+            food_ticks = 0
+
+        # this segment spawns a power-up wafer
+        # every 15 seconds
+        if wafer_ticks == 15:
+            wafer.append(Wafer(screen))
+            wafer_ticks = 0
 
 run_game()
