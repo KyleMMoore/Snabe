@@ -3,7 +3,7 @@ from food import Food
 
 class Wafer(Food):
 
-    def __init__(self, screen):
+    def __init__(self, screen, entities):
         self.screen = screen
         self.screen_rect = screen.get_rect()
         try:
@@ -15,3 +15,4 @@ class Wafer(Food):
             self.rect = self.food_sprite.get_rect()
 
         self.assignLocation()
+        entities[self] = self.rect

@@ -2,7 +2,7 @@ import pygame
 
 
 class Body():
-    def __init__(self, screen, settings, head, segment_number):
+    def __init__(self, screen, settings, head, entities, segment_number):
         self.screen = screen
         self.screen_rect = self.screen.get_rect()
         self.settings = settings
@@ -10,6 +10,7 @@ class Body():
         self.head = head
         self.segment_number = segment_number
         self.is_last_segment = self.segment_number == self.head.score
+
 
         # store previous segment for future reference
         if self.segment_number == 0:
@@ -35,6 +36,8 @@ class Body():
 
         self.rect.top = self.previous_segment.rect.bottom
         self.rect.centerx = self.previous_segment.rect.centerx
+
+        entities[self] = self.rect
 
         # float values for centers, allows us to do math easily
         self.centerx = float(self.rect.centerx)

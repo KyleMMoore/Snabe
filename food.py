@@ -2,7 +2,7 @@ import pygame
 from random import randint
 from settings import Settings
 class Food():
-    def __init__(self, screen):
+    def __init__(self, screen, entities):
         self.screen = screen
         self.screen_rect = screen.get_rect()
 
@@ -16,6 +16,7 @@ class Food():
 
         self.assignLocation()
         self.isEaten = False
+        entities[self] = self.rect
 
     def blitme(self):
         self.screen.blit(self.food_sprite, self.rect)
@@ -23,3 +24,6 @@ class Food():
     def assignLocation(self):
         self.rect.centerx = randint(0, Settings().screen_width)
         self.rect.centery = randint(Settings().screen_height//8, Settings().screen_height)
+
+    def destroy(self):
+        pass

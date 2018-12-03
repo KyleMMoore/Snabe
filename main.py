@@ -15,13 +15,18 @@ def run_game():
     #settings/constants file
     snabings = Settings()
     screen = pygame.display.set_mode((snabings.screen_width, snabings.screen_height))
+    screen_rect = screen.get_rect()
     pygame.display.set_caption("Snabe")
 
-    snabe1 = Snabe(screen, snabings, 1)
-    snabe2 = Snabe(screen, snabings, 2)
+    # Creates a list to hold all currently existing entities
+    entities = dict()
+    entities[screen] = screen_rect
+
+    snabe1 = Snabe(screen, snabings, entities, 1)
+    snabe2 = Snabe(screen, snabings, entities, 2)
 
     # list of food pellets to be displayed
-    food = [Food(screen)]
+    food = [Food(screen, entities)]
 
     # list of power-ups to be displayed
     # initial start-up does NOT spawn wafer
@@ -73,15 +78,15 @@ def run_game():
             sys.exit()
 
         # this segment is responsible for spawning food
-        # ever 5 seconds
+        # every 5 seconds
         if food_ticks == 5:
-            food.append(Food(screen))
+            food.append(Food(screen, entities))
             food_ticks = 0
 
         # this segment spawns a power-up wafer
         # every 15 seconds
         if wafer_ticks == 15:
-            wafer.append(Wafer(screen))
+            wafer.append(Wafer(screen, entities))
             wafer_ticks = 0
 
 run_game()
