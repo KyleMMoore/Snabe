@@ -18,15 +18,20 @@ def run_game():
     screen_rect = screen.get_rect()
     pygame.display.set_caption("Snabe")
 
-    # Creates a list to hold all currently existing entities
-    entities = dict()
-    entities[screen] = screen_rect
+    # Creates a dict to hold all currently existing entities as values and their rects as keys
+    entities = list()
 
-    snabe1 = Snabe(screen, snabings, entities, 1)
-    snabe2 = Snabe(screen, snabings, entities, 2)
+    # Creates a dict where keys are entity centerpoints and values are entity rects
+    entities_rects = list()
+
+    entities.append(screen)
+    entities_rects.append(screen_rect)
+
+    snabe1 = Snabe(screen, snabings, entities, entities_rects, 1)
+    snabe2 = Snabe(screen, snabings, entities, entities_rects, 2)
 
     # list of food pellets to be displayed
-    food = [Food(screen, entities)]
+    food = [Food(screen, entities, entities_rects)]
 
     # list of power-ups to be displayed
     # initial start-up does NOT spawn wafer

@@ -2,7 +2,7 @@ import pygame
 
 
 class Body():
-    def __init__(self, screen, settings, head, entities, segment_number):
+    def __init__(self, screen, settings, head, entities, entities_rects, segment_number):
         self.screen = screen
         self.screen_rect = self.screen.get_rect()
         self.settings = settings
@@ -37,13 +37,16 @@ class Body():
         self.rect.top = self.previous_segment.rect.bottom
         self.rect.centerx = self.previous_segment.rect.centerx
 
-        entities[self] = self.rect
-
         # float values for centers, allows us to do math easily
         self.centerx = float(self.rect.centerx)
         self.centery = float(self.rect.centery)
 
         self.lastLoc = (self.centerx, self.centery)
+
+        # Stores segment and rect in the global dict
+        entities[self] = self.rect
+        # Stores segment location and rect in the global dict
+        entities_rects[self.lastLoc] = self.rect
 
         # movement flags
         self.moving_up = False

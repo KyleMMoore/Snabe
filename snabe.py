@@ -5,7 +5,7 @@ from wafer import Wafer
 
 
 class Snabe():
-    def __init__(self, screen, settings, entities, player_num):
+    def __init__(self, screen, settings, entities, entities_rects, player_num):
         self.screen = screen
         self.settings = settings
         self.player_num = player_num
@@ -13,6 +13,7 @@ class Snabe():
         self.score = 5  # all players will start with base score of 1
         self.turns = dict()
         self.entities = entities
+        self.entities_rects = entities_rects
 
         # Flipped to True when sword powerup is active
         self.canDamage = False
@@ -32,7 +33,7 @@ class Snabe():
             self.rect = self.head_sprite.get_rect()
 
         self.screen_rect = screen.get_rect()
-        self.entities[self] = self.rect
+
         # set locations: both will be in the same y plane, but x plane will depend on player_num
         if self.player_num == 1:
             self.rect.centerx = 100
@@ -44,6 +45,14 @@ class Snabe():
         self.centerx = float(self.rect.centerx)
         self.centery = float(self.rect.centery)
 
+        # help track the head
+        self.lastLoc = (self.centerx, self.centery)
+
+        # Add head to the global entity list
+        self.entities.append(self)
+        # Add head's rect to global rect list
+        self.entities_rects.append(self.rect)
+
         # movement flags
         # only one flag should be "True" at a time: this keeps movement locked to a grid
         self.moving_up = False
@@ -51,13 +60,12 @@ class Snabe():
         self.moving_left = False
         self.moving_right = False
 
-        # help track the head
-        self.lastLoc = (self.centerx, self.centery)
+
 
         # a list to keep track of body segments
         self.segments = list()
         for x in range(self.score + 1):
-            self.segments.append(Body(self.screen, self.settings, self, self.entities, x))
+            self.segments.append(Body(self.screen, self.settings, self, self.entities, self.entities_rects, x))
 
     def move(self):
         # snabe moves in the direction that the flags indicate
@@ -79,9 +87,11 @@ class Snabe():
         for x in self.segments:
             x.move()
 
-        colliding_entity = self.rect.collidedict(self.entities)
-        if colliding_entity != None:
-            self.collision(colliding_entity[0])
+        colliding_entity = self.rect.collidelist(self.entities_rects)
+        if colliding_entity == -1:
+            pass
+        else:
+            self.collision(self.entities[colliding_entity])
 
 
 
@@ -129,20 +139,29 @@ class Snabe():
             return "RIGHT"
 
     def collision(self, target):
+        # If player collides with another Snabe head
         if type(target) is Snabe:
             if target.isVulnerable and self.canDamage:
                 target.reduce_score(target.score)
             elif not target.isVulnerable:
                 self.stun()
+
+        # If player collides with a food pellet
         elif type(target) is Food:
             self.augment_score(self, 1)
             self.entities.remove(target)
             target.destroy()
+
+        # If player collides with a powerup wafer
         elif type(target) is Wafer:
-            self.do_powerup(type(target))
+            self.do_powerup(target.get_type())
             target.destroy()
+
+        # If player collides with screen boundaries
         elif type(target) is pygame.display:
+            # Sets user score to 2
             self.reduce_score(self.score - 2)
+
             if self.moving_up or self.moving_down:
                 self.moving_up = self.moving_down = False
                 self.moving_left = self.rect.centerx > self.settings.screen_width / 2
@@ -164,6 +183,10 @@ class Snabe():
         self.score -= amount
         for x in range(amount):
             self.segments.remove(self.segments[x])
+            x.destroy()
 
     def stun(self):
+        pass
+
+    def do_powerup(self, type):
         pass
