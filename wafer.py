@@ -20,22 +20,9 @@ class Wafer():
         finally:
             self.rect = self.food_sprite.get_rect()
 
-        self.assignLocation()
+        self.chooseLocation()
         self.entities.append(self)
         self.entities_rects.append(self.rect)
-
-    def blitme(self):
-        self.screen.blit(self.food_sprite, self.rect)
-
-    def assignLocation(self):
-        self.rect.centerx = randint(0, self.snabings.screen_width)
-        self.rect.centery = randint(self.snabings.screen_height//8, self.snabings.screen_height)
-
-    def destroy(self):
-        print(self.get_type())
-        self.snabings.wafer_list.remove(self)
-        self.entities.remove(self)
-        self.entities_rects.remove(self.rect)
 
     def set_type(self):
         switch = {
@@ -46,3 +33,24 @@ class Wafer():
 
     def get_type(self):
         return self.power_type
+
+    def chooseLocation(self):
+        self.rect.centerx = randint(0, self.snabings.screen_width)
+        self.rect.centery = randint(self.snabings.screen_height//8, self.snabings.screen_height)
+
+    def setLocation(self, x, y):
+        self.rect.centerx = x
+        self.rect.centery = y
+
+    # returns a tuple containing the (x, y) of the rect
+    def getLocation(self):
+        return ((self.rect.centerx, self.rect.centery))
+
+    def blitme(self):
+        self.screen.blit(self.food_sprite, self.rect)
+
+    def destroy(self):
+        print(self.get_type())
+        self.snabings.wafer_list.remove(self)
+        self.entities.remove(self)
+        self.entities_rects.remove(self.rect)
