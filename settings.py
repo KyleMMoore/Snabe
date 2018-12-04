@@ -13,13 +13,17 @@ class Settings():
         #ideal speed seems to be 2-3
         self.base_speed = 1
 
-        #constants for calculating game speed/time
+        #constants for calculating game speed:time
         self.tick_rate = 60
         self.game_length = 60
 
         #constants to determine spawn rates (per n seconds)
-        self.food_spawn_rate = 5
+        self.food_spawn_rate = 7
         self.wafer_spawn_rate = 15
+
+        #constants to determine each power-up's active time
+        self.sword_time = 8
+        self.shield_time = 12
 
         #Stores the active food and wafer objects
         self.food_list = []
@@ -28,4 +32,8 @@ class Settings():
         #TODO: store entities and rects here instead of passing them to everything
         self.entities = []
         self.entities_rects = []
+
+        #calculations that regulate seconds:tick rate
+        self.sword_time = self.sword_time * self.tick_rate
+        self.shield_time = self.shield_time * self.tick_rate
 
