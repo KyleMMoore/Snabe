@@ -166,7 +166,7 @@ class Snabe():
         # If player collides with screen boundaries
         elif target == "WALL":
             # Sets user score to 2
-            self.reduce_score(self.score - 2)
+            self.reduce_score(1)#self.score - 2)
 
             if self.moving_up or self.moving_down:
                 self.moving_up = self.moving_down = False
@@ -186,15 +186,17 @@ class Snabe():
             self.segments.append(Body(self.screen, self.settings, self, self.entities, self.entities_rects,
                                       self.score - amount + x + 1))
 
-
     def reduce_score(self, amount):
         self.score -= amount
         for x in range(amount):
-            self.segments.remove(self.segments[x])
-            x.destroy()
+            #self.segments.remove(self.segments[len(self.segments) - x - 1])
+            self.segments[-1].destroy()
 
     def stun(self):
         pass
 
     def do_powerup(self, type):
-        pass
+        if type == "SWORD":
+            self.canDamage = True
+        if type == "SHIELD":
+            self.isVulnerable = False

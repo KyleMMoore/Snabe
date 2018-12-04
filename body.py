@@ -11,7 +11,8 @@ class Body():
         self.segment_number = segment_number
         self.is_last_segment = self.segment_number == self.head.score
         self.lastLoc = (0,0)
-
+        self.entities = entities
+        self.entities_rects = entities_rects
 
         # store previous segment for future reference
         if self.segment_number == 0:
@@ -37,15 +38,9 @@ class Body():
 
         self.lastLoc = (self.centerx, self.centery)
 
-        # Stores segment and rect in the global dict
-        entities.append(self)
-        # Stores segment location and rect in the global dict
-        entities_rects.append(self.rect)
-
-        print(str(self.segment_number))
-        print(self.is_last_segment)
-
-
+        # Stores segment and rect in the global lists
+        self.entities.append(self)
+        self.entities_rects.append(self.rect)
 
     def move(self):
         if self.head.is_moving():
@@ -61,7 +56,7 @@ class Body():
             # update the center values that the rect holds with the newly modified float versions
             self.rect.centerx = self.centerx
             self.rect.centery = self.centery
-            self.lastLoc = (self.centerx, self.centery)
+            self.lastLoc = (self.rect.centerx, self.rect.centery)
             self.drawSegment()
             if self.lastLoc in self.head.turns:
                 self.turn(self.head.turns[self.lastLoc])
@@ -172,8 +167,16 @@ class Body():
         else:
             self.rect.top = self.previous_segment.rect.bottom
             self.rect.centerx = self.previous_segment.rect.centerx
+        self.lastLoc = (self.rect.centerx, self.rect.centery)
 
-
+    def destroy(self):
+        print(self.segment_number)
+        pos = self.entities.index(self)
+        self.entities_rects.pop(pos)
+        self.entities.remove(self)
+        self.head.segments.remove(self)
+        self.previous_segment.is_last_segment = True
+        self.rect.centerx = self.rect.centery = -1
 
 
 
