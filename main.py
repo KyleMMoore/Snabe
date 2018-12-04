@@ -29,6 +29,7 @@ def run_game():
 
     # list of food pellets to be displayed
     snabings.food_list.append(Food(screen, snabings, entities, entities_rects))
+    snabings.food_list[0].setLocation(snabings.screen_width//2,snabings.screen_height//2)
 
     # timer class object
     game_timer = Timer(screen, snabings.game_length)
@@ -36,55 +37,63 @@ def run_game():
     #established to regulate game speed
     clock = pygame.time.Clock()
 
-    # stores total number of ticks required for the length of game
-    timerThread = snabings.game_length * snabings.tick_rate
-
     # global tick rate established in settings.py
     tick_rate = snabings.tick_rate
 
     # length to be displayed on timer
     game_length = snabings.game_length
 
-    # keeps track of each timer tick
-    # starts at -1 because timer starts at 0
-    food_ticks = -1
-
-    # keeps track of each timer tick
-    # in relevance to power-up spawns
-    wafer_ticks = -1
+    # keeps track of tick counts
+    ticks = {
+        "timer" : -1,
+        "food" : -1,
+        "wafer" : -1,
+    }
 
     while True:
         # establishes tick rate for game
         clock.tick(tick_rate)
 
         gf.check_events(snabe1, snabe2)
+
+        #TODO: use the global entities list to update the screen?
+        # -Kyle
+        #TODO: store EVERYTHING in settings.py? That way all we pass is snabings
+        # -Kyle pt. 2
         gf.update_screen(snabings, screen, snabe1, snabe2, game_timer)
 
         snabe1.move()
         snabe2.move()
 
+        #TODO: Try and fix this to regulate the game clock and timer
+        #if ticks["timer"] == snabings.tick_rate:
+        #    game_timer.tick()
+        #    ticks["food"] += 1
+        #    ticks["wafer"] += 1
+        #    ticks["timer"] = 0
+
         # regulates when the timer should tick in accordance
         # to game tick rate
-        if timerThread % game_length == 0:
+        if snabings.timer_value % game_length == 0:
             game_timer.tick()
-            food_ticks +=1
-            wafer_ticks +=1
-        if timerThread >=1:
-            timerThread-=1
+            ticks["food"] += 1
+            ticks["wafer"] += 1
+        if snabings.timer_value >= 1:
+            snabings.timer_value -=1
         else:
-            timerThread = 0
+            snabings.timer_value = 0
             sys.exit()
 
         # this segment is responsible for spawning food
         # every n seconds
-        if food_ticks == snabings.food_spawn_rate:
-            snabings.food_list.append(Food(screen, snabings, entities, entities_rects))
-            food_ticks = 0
+        if ticks["food"] == snabings.food_spawn_rate:
+            snabings.food_list.append((Food(screen, snabings, entities, entities_rects)))
+            ticks["food"] = 0
 
         # this segment spawns a power-up wafer
         # every n seconds
-        if wafer_ticks == snabings.wafer_spawn_rate:
+        if ticks["wafer"] == snabings.wafer_spawn_rate:
             snabings.wafer_list.append(Wafer(screen, snabings, entities, entities_rects))
-            wafer_ticks = 0
+            ticks["wafer"] = 0
 
 run_game()

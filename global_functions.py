@@ -1,5 +1,6 @@
 import sys
 import pygame
+from food import Food
 from settings import Settings
 def update_screen(snabings, screen, snabe1, snabe2, timer):
     screen.fill(snabings.background_color)
@@ -123,9 +124,4 @@ def check_events(snabe1, snabe2):
                 if not snabe2_notFirstMove:
                     for x in snabe2.segments:
                         x.moving_up = True
-
-
-
-
-
 

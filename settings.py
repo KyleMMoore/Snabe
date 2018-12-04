@@ -19,7 +19,7 @@ class Settings():
 
         #constants to determine spawn rates (per n seconds)
         self.food_spawn_rate = 7
-        self.wafer_spawn_rate = 15
+        self.wafer_spawn_rate = 16
 
         #constants to determine each power-up's active time
         self.sword_time = 8
@@ -29,6 +29,9 @@ class Settings():
         self.food_list = []
         self.wafer_list = []
 
+        #stores remaining time in game session
+        self.timer_value = self.game_length * self.tick_rate
+
         #TODO: store entities and rects here instead of passing them to everything
         self.entities = []
         self.entities_rects = []
@@ -36,4 +39,3 @@ class Settings():
         #calculations that regulate seconds:tick rate
         self.sword_time = self.sword_time * self.tick_rate
         self.shield_time = self.shield_time * self.tick_rate
-

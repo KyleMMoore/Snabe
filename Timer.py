@@ -3,12 +3,16 @@ import sys
 
 
 class Timer():
-    def __init__(self, screen, time_left):
+    def __init__(self, screen, int):
         self.screen = screen
         self.screen_rect = screen.get_rect()
 
-        # time to display on Timer
-        self.time = time_left
+        if int > 99:
+            self.time = 99
+        elif int <= 0:
+            self.time = 1
+        else:
+            self.time = int\
 
         # load timer image and set rect
         try:
