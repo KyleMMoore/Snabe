@@ -28,11 +28,7 @@ def run_game():
     snabe2 = Snabe(screen, snabings, entities, entities_rects, 2)
 
     # list of food pellets to be displayed
-    food = [Food(screen, entities, entities_rects)]
-
-    # list of power-ups to be displayed
-    # initial start-up does NOT spawn wafer
-    wafer = []
+    snabings.food_list.append(Food(screen, snabings, entities, entities_rects))
 
     # timer class object
     game_timer = Timer(screen, snabings.game_length)
@@ -62,7 +58,7 @@ def run_game():
         clock.tick(tick_rate)
 
         gf.check_events(snabe1, snabe2)
-        gf.update_screen(snabings, screen, snabe1, snabe2, game_timer, food, wafer)
+        gf.update_screen(snabings, screen, snabe1, snabe2, game_timer)
 
         snabe1.move()
         snabe2.move()
@@ -80,15 +76,15 @@ def run_game():
             sys.exit()
 
         # this segment is responsible for spawning food
-        # every 5 seconds
-        if food_ticks == 5:
-            food.append(Food(screen, entities, entities_rects))
+        # every n seconds
+        if food_ticks == snabings.food_spawn_rate:
+            snabings.food_list.append(Food(screen, snabings, entities, entities_rects))
             food_ticks = 0
 
         # this segment spawns a power-up wafer
-        # every 15 seconds
-        if wafer_ticks == 15:
-            wafer.append(Wafer(screen, entities, entities_rects))
+        # every n seconds
+        if wafer_ticks == snabings.wafer_spawn_rate:
+            snabings.wafer_list.append(Wafer(screen, snabings, entities, entities_rects))
             wafer_ticks = 0
 
 run_game()

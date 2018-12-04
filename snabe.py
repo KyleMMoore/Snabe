@@ -3,7 +3,6 @@ from body import Body
 from food import Food
 from wafer import Wafer
 
-
 class Snabe():
     def __init__(self, screen, settings, entities, entities_rects, player_num):
         self.screen = screen

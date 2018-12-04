@@ -1,16 +1,16 @@
 import sys
 import pygame
-
-def update_screen(snabings, screen, snabe1, snabe2, timer, food, wafer):
+from settings import Settings
+def update_screen(snabings, screen, snabe1, snabe2, timer):
     screen.fill(snabings.background_color)
     snabe1.blitme()
     snabe2.blitme()
     timer.blitme()
     # blits everything in food list
-    for a in food:
+    for a in snabings.food_list:
         a.blitme()
     # blits everything in wafer list
-    for b in wafer:
+    for b in snabings.wafer_list:
         b.blitme()
 
     pygame.display.flip()
