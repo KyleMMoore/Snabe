@@ -69,18 +69,24 @@ class Snabe():
 
     def move(self):
         # snabe moves in the direction that the flags indicate
-        if self.moving_up and self.rect.top > 0:
-            self.centery -= self.speed
-        if self.moving_down and self.rect.bottom < self.screen_rect.bottom:
-            self.centery += self.speed
-        if self.moving_left and self.rect.left > 0:
-            self.centerx -= self.speed
-        if self.moving_right and self.rect.right < self.screen_rect.right:
-            self.centerx += self.speed
+        if self.rect.top > 0 and self.rect.bottom < self.screen_rect.bottom and self.rect.left > 0 and self.rect.right < self.screen_rect.right:
+            if self.moving_up:
+                self.centery -= self.speed
+            if self.moving_down:
+                self.centery += self.speed
+            if self.moving_left:
+                self.centerx -= self.speed
+            if self.moving_right:
+                self.centerx += self.speed
+
+        else:
+            self.collision("WALL")
 
         # update the center values that the rect holds with the newly modified float versions
         self.rect.centerx = self.centerx
         self.rect.centery = self.centery
+
+        self.lastLoc = (self.centerx, self.centery)
 
         self.drawSnabe()
 
@@ -88,9 +94,10 @@ class Snabe():
             x.move()
 
         colliding_entity = self.rect.collidelist(self.entities_rects)
-        if colliding_entity == -1:
+        if colliding_entity == -1 or self.entities[colliding_entity] == self:
             pass
         else:
+            print(type(self.entities[colliding_entity]))
             self.collision(self.entities[colliding_entity])
 
 
@@ -120,7 +127,7 @@ class Snabe():
                 self.head_sprite = pygame.image.load("images/blue/blueHeadLT.bmp")
             elif self.moving_right:
                 self.head_sprite = pygame.image.load("images/blue/blueHeadRT.bmp")
-        self.rect = self.head_sprite.get_rect(center=(self.centerx, self.centery))
+        self.rect = self.head_sprite.get_rect(center=self.lastLoc)
 
     def is_moving(self):
         return self.moving_up or self.moving_down or self.moving_left or self.moving_right
@@ -148,8 +155,7 @@ class Snabe():
 
         # If player collides with a food pellet
         elif type(target) is Food:
-            self.augment_score(self, 1)
-            self.entities.remove(target)
+            self.augment_score(1)
             target.destroy()
 
         # If player collides with a powerup wafer
@@ -158,7 +164,7 @@ class Snabe():
             target.destroy()
 
         # If player collides with screen boundaries
-        elif type(target) is pygame.display:
+        elif target == "WALL":
             # Sets user score to 2
             self.reduce_score(self.score - 2)
 
@@ -175,9 +181,11 @@ class Snabe():
 
 
     def augment_score(self, amount):
-        for x in range(amount):
-            self.segments.append(Body(self.screen, self.settings, self, self.entities, self.score + x))
         self.score += amount
+        for x in range(amount):
+            self.segments.append(Body(self.screen, self.settings, self, self.entities, self.entities_rects,
+                                      self.score - amount + x + 1))
+
 
     def reduce_score(self, amount):
         self.score -= amount

@@ -24,9 +24,6 @@ def run_game():
     # Creates a dict where keys are entity centerpoints and values are entity rects
     entities_rects = list()
 
-    entities.append(screen)
-    entities_rects.append(screen_rect)
-
     snabe1 = Snabe(screen, snabings, entities, entities_rects, 1)
     snabe2 = Snabe(screen, snabings, entities, entities_rects, 2)
 
@@ -85,13 +82,13 @@ def run_game():
         # this segment is responsible for spawning food
         # every 5 seconds
         if food_ticks == 5:
-            food.append(Food(screen, entities))
+            food.append(Food(screen, entities, entities_rects))
             food_ticks = 0
 
         # this segment spawns a power-up wafer
         # every 15 seconds
         if wafer_ticks == 15:
-            wafer.append(Wafer(screen, entities))
+            wafer.append(Wafer(screen, entities, entities_rects))
             wafer_ticks = 0
 
 run_game()

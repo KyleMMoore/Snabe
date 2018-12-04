@@ -5,6 +5,8 @@ class Food():
     def __init__(self, screen, entities, entities_rects):
         self.screen = screen
         self.screen_rect = screen.get_rect()
+        self.entities = entities
+        self.entities_rects = entities_rects
 
         try:
             self.food_sprite = pygame.image.load("images/items/food.bmp")
@@ -16,8 +18,8 @@ class Food():
 
         self.assignLocation()
         self.isEaten = False
-        entities.append(self)
-        entities_rects.append(self.rect)
+        self.entities.append(self)
+        self.entities_rects.append(self.rect)
     def blitme(self):
         self.screen.blit(self.food_sprite, self.rect)
 
@@ -26,4 +28,5 @@ class Food():
         self.rect.centery = randint(Settings().screen_height//8, Settings().screen_height)
 
     def destroy(self):
-        pass
+        self.entities.remove(self)
+        self.entities_rects.remove(self.rect)
