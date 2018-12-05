@@ -2,14 +2,13 @@ import pygame
 from random import randint
 
 class Food():
-    def __init__(self, screen, snabings, entities, entities_rects):
+    def __init__(self, screen, snabings):
         self.screen = screen
         self.screen_rect = screen.get_rect()
-        self.entities = entities
-        self.entities_rects = entities_rects
         self.snabings = snabings
+        
         try:
-            self.food_sprite = pygame.image.load("images/items/food.bmp")
+            self.food_sprite = pygame.image.load("images/items/food.png")
         except:
             print("Failed to load food sprite: falling back on dummy.bmp")
             self.food_sprite = pygame.image.load("images/dummy.bmp")
@@ -17,8 +16,8 @@ class Food():
             self.rect = self.food_sprite.get_rect()
 
         self.chooseLocation()
-        self.entities.append(self)
-        self.entities_rects.append(self.rect)
+        self.snabings.entities.append(self)
+        self.snabings.entities_rects.append(self.rect)
 
     def chooseLocation(self):
         self.rect.centerx = randint(0, self.snabings.screen_width)
@@ -37,5 +36,5 @@ class Food():
 
     def destroy(self):
         self.snabings.food_list.remove(self)
-        self.entities.remove(self)
-        self.entities_rects.remove(self.rect)
+        self.snabings.entities.remove(self)
+        self.snabings.entities_rects.remove(self.rect)

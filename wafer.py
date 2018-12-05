@@ -3,17 +3,15 @@ from random import randint
 
 class Wafer():
 
-    def __init__(self, screen, snabings, entities, entities_rects):
+    def __init__(self, screen, snabings):
         self.screen = screen
         self.screen_rect = screen.get_rect()
-        self.entities = entities
-        self.entities_rects = entities_rects
         self.snabings = snabings
 
         self.power_type = "NONE"
         self.set_type()
         try:
-            self.food_sprite = pygame.image.load("images/items/wafer.bmp")
+            self.food_sprite = pygame.image.load("images/items/wafer.png")
         except:
             print("Failed to load wafer sprite. Falling back on dummy.bmp")
             self.food_sprite = pygame.image.load("images/dummy.bmp")
@@ -21,8 +19,8 @@ class Wafer():
             self.rect = self.food_sprite.get_rect()
 
         self.chooseLocation()
-        self.entities.append(self)
-        self.entities_rects.append(self.rect)
+        self.snabings.entities.append(self)
+        self.snabings.entities_rects.append(self.rect)
 
     def set_type(self):
         switch = {
@@ -52,5 +50,5 @@ class Wafer():
     def destroy(self):
         print(self.get_type())
         self.snabings.wafer_list.remove(self)
-        self.entities.remove(self)
-        self.entities_rects.remove(self.rect)
+        self.snabings.entities.remove(self)
+        self.snabings.entities_rects.remove(self.rect)

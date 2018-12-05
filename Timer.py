@@ -16,7 +16,7 @@ class Timer():
 
         # load timer image and set rect
         try:
-            self.timer_body = pygame.image.load("images/timer/timerBody.bmp")
+            self.timer_body = pygame.image.load("images/timer/timerBody.png")
         except:
             print("Failed to load timer body sprite. Falling back on dummy.bmp")
             self.timer_body = pygame.image.load("images/dummy.bmp")
@@ -28,7 +28,7 @@ class Timer():
 
         # load image and rect for left digit
         try:
-            self.left_digit = pygame.image.load("images/timer/timer_0.bmp")
+            self.left_digit = pygame.image.load("images/timer/timer_0.png")
         except:
             print("Failed to load timer left digit sprite. Falling back on dummy.bmp")
             self.left_digit = pygame.image.load("images/dummy.bmp")
@@ -41,7 +41,7 @@ class Timer():
 
         # load image and rect for right digit
         try:
-            self.right_digit = pygame.image.load("images/timer/timer_0.bmp")
+            self.right_digit = pygame.image.load("images/timer/timer_0.png")
         except:
             print("Failed to load timer right digit sprite. Falling back on dummy.bmp")
             self.right_digit = pygame.image.load("images/dummy.bmp")
@@ -87,19 +87,19 @@ class Timer():
     # arg is the number to be converted to image
     def switch(self, arg):
         switchDict = {
-            0: "images/timer/timer_0.bmp",
-            1: "images/timer/timer_1.bmp",
-            2: "images/timer/timer_2.bmp",
-            3: "images/timer/timer_3.bmp",
-            4: "images/timer/timer_4.bmp",
-            5: "images/timer/timer_5.bmp",
-            6: "images/timer/timer_6.bmp",
-            7: "images/timer/timer_7.bmp",
-            8: "images/timer/timer_8.bmp",
-            9: "images/timer/timer_9.bmp",
+            0: "images/timer/zero.png",
+            1: "images/timer/one.png",
+            2: "images/timer/two.png",
+            3: "images/timer/three.png",
+            4: "images/timer/four.png",
+            5: "images/timer/five.png",
+            6: "images/timer/six.png",
+            7: "images/timer/seven.png",
+            8: "images/timer/eight.png",
+            9: "images/timer/nine.png",
         }
         # return the corresponding image or return image for 0
-        return switchDict.get(arg, lambda: "images/timer/timer_0.bmp")
+        return switchDict.get(arg, lambda: "images/timer/zero.png")
 
     # render image on screen
     def blitme(self):

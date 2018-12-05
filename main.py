@@ -19,16 +19,16 @@ def run_game():
     pygame.display.set_caption("Snabe")
 
     # Creates a dict to hold all currently existing entities as values and their rects as keys
-    entities = list()
+    #entities = list()
 
     # Creates a dict where keys are entity centerpoints and values are entity rects
-    entities_rects = list()
+    #entities_rects = list()
 
-    snabe1 = Snabe(screen, snabings, entities, entities_rects, 1)
-    snabe2 = Snabe(screen, snabings, entities, entities_rects, 2)
+    snabe1 = Snabe(screen, snabings, 1)
+    snabe2 = Snabe(screen, snabings,2)
 
     # list of food pellets to be displayed
-    snabings.food_list.append(Food(screen, snabings, entities, entities_rects))
+    snabings.food_list.append(Food(screen, snabings))
     snabings.food_list[0].setLocation(snabings.screen_width//2,snabings.screen_height//2)
 
     # timer class object
@@ -63,8 +63,8 @@ def run_game():
         # -Kyle pt. 2
         gf.update_screen(snabings, screen, snabe1, snabe2, game_timer)
 
-        snabe1.move()
-        snabe2.move()
+        snabe1.update()
+        snabe2.update()
 
         ####################################
         # Accounts for the amount of ticks #
@@ -88,13 +88,13 @@ def run_game():
         # this segment is responsible for spawning food
         # every n seconds
         if ticks["food"] == snabings.food_spawn_rate:
-            snabings.food_list.append((Food(screen, snabings, entities, entities_rects)))
+            snabings.food_list.append((Food(screen, snabings)))
             ticks["food"] = 0
 
         # this segment spawns a power-up wafer
         # every n seconds
         if ticks["wafer"] == snabings.wafer_spawn_rate:
-            snabings.wafer_list.append(Wafer(screen, snabings, entities, entities_rects))
+            snabings.wafer_list.append(Wafer(screen, snabings))
             ticks["wafer"] = 0
 
 def startScreen():
