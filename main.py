@@ -178,6 +178,31 @@ def endScreen():
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     run_game()
+                elif event.key == pygame.K_ESCAPE:
+                    startScreen()
+        pygame.font.init()
 
+        myfont = pygame.font.SysFont('Courier', 30)
+        restartPrompt = myfont.render('Game over! Press Space to Play Again!', False, (0, 0, 0))
+        restartRect = restartPrompt.get_rect()
+        restartRect.centerx = screen_rect.centerx
+        restartRect.centery = screen_rect.centery
+
+        myfont = pygame.font.SysFont('Courier', 20)
+        menuPrompt = myfont.render('Press Esc to go back to the main menu', False, (0, 0, 0))
+        menuRect = menuPrompt.get_rect()
+        menuRect.centerx = screen_rect.centerx
+        menuRect.top = restartRect.bottom
+
+        myfont = pygame.font.SysFont('Courier', 45)
+        winnerPrompt = myfont.render('Winner!', False, (0, 0, 0))
+        winnerRect = winnerPrompt.get_rect()
+        winnerRect.centerx = screen_rect.centerx
+        winnerRect.bottom = restartRect.top
+
+        screen.blit(restartPrompt,restartRect)
+        screen.blit(menuPrompt,menuRect)
+        screen.blit(winnerPrompt, winnerRect)
+        pygame.display.flip()
 startScreen()
 run_game()
