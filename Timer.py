@@ -12,7 +12,7 @@ class Timer():
         elif int <= 0:
             self.time = 1
         else:
-            self.time = int\
+            self.time = int
 
         # load timer image and set rect
         try:
