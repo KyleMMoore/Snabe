@@ -2,17 +2,15 @@ import pygame
 
 
 class Body():
-    def __init__(self, screen, settings, head, entities, entities_rects, segment_number):
+    def __init__(self, screen, snabings, head, segment_number):
         self.screen = screen
         self.screen_rect = self.screen.get_rect()
-        self.settings = settings
-        self.speed = settings.base_speed
+        self.snabings = snabings
+        self.speed = head.speed
         self.head = head
         self.segment_number = segment_number
         self.is_last_segment = self.segment_number == self.head.score
         self.lastLoc = (0,0)
-        self.entities = entities
-        self.entities_rects = entities_rects
 
         # store previous segment for future reference
         if self.segment_number == 0:
@@ -37,10 +35,34 @@ class Body():
         self.centery = float(self.rect.centery)
 
         self.lastLoc = (self.centerx, self.centery)
+        self.lastDirection = "NONE"
 
         # Stores segment and rect in the global lists
-        self.entities.append(self)
-        self.entities_rects.append(self.rect)
+        self.snabings.entities.append(self)
+        self.snabings.entities_rects.append(self.rect)
+        self.global_index = len(self.snabings.entities_rects) - 1
+        print(len(self.snabings.entities_rects))
+        print(self.global_index)
+
+    def update(self):
+        try:
+            self.global_index = self.snabings.entities_rects.index(self.rect)
+        except ValueError:
+            print (str(self.rect) + " :: " + str(self.snabings.entities_rects[self.global_index]))
+
+        self.move()
+        self.snabings.entities_rects[self.global_index] = self.rect
+
+        # update the center values that the rect holds with the newly modified float versions
+        self.rect.centerx = self.centerx
+        self.rect.centery = self.centery
+        self.lastLoc = (self.rect.centerx, self.rect.centery)
+        if not self.head.stunned:
+            self.lastDirection = self.get_direction()
+            self.drawSegment()
+
+        if self.lastLoc in self.head.turns:
+            self.turn(self.head.turns[self.lastLoc])
 
     def move(self):
         if self.head.is_moving():
@@ -53,41 +75,8 @@ class Body():
             if self.moving_right:
                 self.centerx += self.speed
 
-            # update the center values that the rect holds with the newly modified float versions
-            self.rect.centerx = self.centerx
-            self.rect.centery = self.centery
-            self.lastLoc = (self.rect.centerx, self.rect.centery)
-            self.drawSegment()
-            if self.lastLoc in self.head.turns:
-                self.turn(self.head.turns[self.lastLoc])
-        else:
-            self.moving_up = self.moving_down = self.moving_left = self.moving_right = False
-
     def turn(self, new_direction):
-        if new_direction == "UP":
-            self.moving_up = True
-            self.moving_down = False
-            self.moving_left = False
-            self.moving_right = False
-
-        if new_direction == "DOWN":
-            self.moving_up = False
-            self.moving_down = True
-            self.moving_left = False
-            self.moving_right = False
-
-        if new_direction == "LEFT":
-            self.moving_up = False
-            self.moving_down = False
-            self.moving_left = True
-            self.moving_right = False
-
-        if new_direction == "RIGHT":
-            self.moving_up = False
-            self.moving_down = False
-            self.moving_left = False
-            self.moving_right = True
-
+        self.set_direction(new_direction)
         if self.is_last_segment:
             del self.head.turns[(self.centerx, self.centery)]
 
@@ -100,6 +89,12 @@ class Body():
             return "LEFT"
         if self.moving_right:
             return "RIGHT"
+
+    def set_direction(self, new_direction):
+        self.moving_up = new_direction == "UP"
+        self.moving_down = new_direction == "DOWN"
+        self.moving_left = new_direction == "LEFT"
+        self.moving_right = new_direction == "RIGHT"
 
     def drawSegment(self):
         sprite_path = "images/"
@@ -141,10 +136,10 @@ class Body():
                 elif new_direction == "DOWN":
                     sprite_path += "SnabeTurnRD.bmp"
         else:
-            if self.moving_up or self.moving_down or not self.head.is_moving():
-                sprite_path += "SnabeBody.bmp"
-            else:
+            if self.moving_left or self.moving_right:
                 sprite_path += "SnabeBodyTurned.bmp"
+            else:
+                sprite_path += "SnabeBody.bmp"
 
         try:
             self.segment_sprite = pygame.image.load(sprite_path)
@@ -171,9 +166,9 @@ class Body():
 
     def destroy(self):
         print(self.segment_number)
-        pos = self.entities.index(self)
-        self.entities_rects.pop(pos)
-        self.entities.remove(self)
+        pos = self.snabings.entities.index(self)
+        self.snabings.entities_rects.pop(pos)
+        self.snabings.entities.remove(self)
         self.head.segments.remove(self)
         self.previous_segment.is_last_segment = True
         self.rect.centerx = self.rect.centery = -1

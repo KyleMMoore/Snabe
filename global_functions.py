@@ -1,7 +1,11 @@
 import sys
 import pygame
+
 from food import Food
 from settings import Settings
+
+settings = Settings()
+
 def update_screen(snabings, screen, snabe1, snabe2, timer):
     screen.fill(snabings.background_color)
     snabe1.blitme()
@@ -22,8 +26,8 @@ def check_events(snabe1, snabe2):
         if event.type == pygame.QUIT:
             sys.exit()
         elif event.type == pygame.KEYDOWN:
-            snabe1_notFirstMove = snabe1.is_moving()
-            snabe2_notFirstMove = snabe2.is_moving()
+            snabe1_notFirstMove = snabe1.first_move()
+            snabe2_notFirstMove = snabe2.first_move()
             if event.key == pygame.K_w and not snabe1.moving_down and not snabe1.moving_up:
                 snabe1.moving_up = True
                 snabe1.moving_down = False
@@ -124,4 +128,3 @@ def check_events(snabe1, snabe2):
                 if not snabe2_notFirstMove:
                     for x in snabe2.segments:
                         x.moving_up = True
-
