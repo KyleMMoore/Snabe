@@ -14,8 +14,8 @@ class Settings():
         self.base_speed = 1
 
         #constants for calculating game speed:time
-        self.tick_rate = 60
-        self.game_length = 60
+        self.tick_rate = 150
+        self.game_length = 5
 
         #constants to determine spawn rates (per n seconds)
         self.food_spawn_rate = 7

@@ -45,9 +45,10 @@ def run_game():
 
     # keeps track of tick counts
     ticks = {
-        "timer" : -1,
-        "food" : -1,
-        "wafer" : -1,
+        "initial": snabings.timer_value,
+        "timer": 0,
+        "food": -1,
+        "wafer": -1,
     }
 
     while True:
@@ -65,24 +66,24 @@ def run_game():
         snabe1.move()
         snabe2.move()
 
-        #TODO: Try and fix this to regulate the game clock and timer
-        #if ticks["timer"] == snabings.tick_rate:
-        #    game_timer.tick()
-        #    ticks["food"] += 1
-        #    ticks["wafer"] += 1
-        #    ticks["timer"] = 0
-
-        # regulates when the timer should tick in accordance
-        # to game tick rate
-        if snabings.timer_value % game_length == 0:
+        ####################################
+        # Accounts for the amount of ticks #
+        # needed to correctly time actions #
+        ####################################
+        ticks["timer"]+=1
+        if ticks["timer"] == tick_rate:
             game_timer.tick()
             ticks["food"] += 1
             ticks["wafer"] += 1
+            ticks["timer"] = 0
+            ticks["initial"] = snabings.timer_value
+
         if snabings.timer_value >= 1:
             snabings.timer_value -=1
         else:
             snabings.timer_value = 0
-            sys.exit()
+            endScreen()
+        ####################################
 
         # this segment is responsible for spawning food
         # every n seconds
@@ -96,4 +97,87 @@ def run_game():
             snabings.wafer_list.append(Wafer(screen, snabings, entities, entities_rects))
             ticks["wafer"] = 0
 
+def startScreen():
+    pygame.init()
+
+    #settings/constants file
+    snabings = Settings()
+    screen = pygame.display.set_mode((snabings.screen_width, snabings.screen_height))
+    screen_rect = screen.get_rect()
+    pygame.display.set_caption("Snabe")
+    screen.fill(snabings.background_color)
+
+    clock = pygame.time.Clock()
+
+    snabeSlither = {
+        "frame": 1,
+        1: "images/menu/snabeSlither1.png",
+        2: "images/menu/snabeSlither2.png",
+        3: "images/menu/snabeSlither3.png",
+        4: "images/menu/snabeSlither4.png",
+    }
+
+    snabe_logo = pygame.image.load(snabeSlither[snabeSlither["frame"]])
+    logo_rect = snabe_logo.get_rect()
+    logo_rect.right = screen_rect.left
+    logo_rect.centery = snabings.screen_height // 6
+
+    snabe_text = pygame.image.load("images/menu/nabe.png")
+    snabe_text_rect = snabe_text.get_rect()
+    snabe_text_rect.left = screen_rect.right
+    snabe_text_rect.centery = snabings.screen_height // 4
+
+    while True:
+        clock.tick(14)
+        screen.fill(snabings.background_color)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                sys.exit()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    run_game()
+
+        #######################################################################
+        # Snabe Slither Animation                                             #
+        #######################################################################
+        if snabeSlither["frame"] == 4:
+            snabeSlither["frame"] = 1
+        else:
+            snabeSlither["frame"] += 1
+        if logo_rect.centerx >= screen_rect.centerx:
+            logo_rect.centerx = screen_rect.centerx
+        else:
+            logo_rect.centerx += 10
+        snabe_logo = pygame.image.load(snabeSlither[snabeSlither["frame"]])
+        screen.blit(snabe_logo, logo_rect)
+        #######################################################################
+        pygame.font.init()
+        myfont = pygame.font.SysFont('Courier', 30)
+        startPrompt = myfont.render('Welcome to Snabe! Press Space to Start!',False, (0,0,0))
+        startRect = startPrompt.get_rect()
+        startRect.centerx = screen_rect.centerx
+        startRect.centery = screen_rect.centery
+        screen.blit(startPrompt,startRect)
+
+        pygame.display.flip()
+def endScreen():
+    pygame.init()
+
+    #settings/constants file
+    snabings = Settings()
+    screen = pygame.display.set_mode((snabings.screen_width, snabings.screen_height))
+    screen_rect = screen.get_rect()
+    pygame.display.set_caption("Snabe")
+    screen.fill(snabings.background_color)
+    pygame.display.flip()
+    while True:
+        screen.fill(snabings.background_color)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                sys.exit()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    run_game()
+
+startScreen()
 run_game()
