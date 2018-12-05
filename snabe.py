@@ -9,7 +9,7 @@ class Snabe():
         self.snabings = snabings
         self.player_num = player_num
         self.speed = snabings.base_speed
-        self.score = 10  # all players will start with base score of 1
+        self.score = 5  # all players will start with base score of 5
         self.turns = dict()
         
         self.power_start_time = -1
@@ -31,9 +31,9 @@ class Snabe():
         # load head sprite, get rect
         try:
             if self.player_num == 1:
-                self.head_sprite = pygame.image.load("images/green/greenHead.bmp")
+                self.head_sprite = pygame.image.load("images/green/greenHead.png")
             elif self.player_num == 2:
-                self.head_sprite = pygame.image.load("images/blue/blueHead.bmp")
+                self.head_sprite = pygame.image.load("images/blue/blueHead.png")
         except:
             print("Failed to load head sprite for player " + self.player_num + ": falling back on dummy.bmp")
             self.head_sprite = pygame.image.load("images/dummy.bmp")
@@ -112,7 +112,6 @@ class Snabe():
             self.stunned = False
             self.set_direction(self.lastDirection)
         else:
-            print(type(self.snabings.entities[colliding_entity]))
             self.collision(self.snabings.entities[colliding_entity])
 
     def blitme(self):
@@ -124,22 +123,55 @@ class Snabe():
     def drawSnabe(self):
         if self.player_num == 1:
             if self.moving_up:
-                self.head_sprite = pygame.image.load("images/green/greenHead.bmp")
+                self.head_sprite = pygame.image.load("images/green/greenHead.png")
+                if self.canDamage:
+                    self.head_sprite = pygame.image.load("images/green/headSword.png")
+                if not self.isVulnerable:
+                    self.head_sprite = pygame.image.load("images/green/headShield.png")
             elif self.moving_down:
-                self.head_sprite = pygame.image.load("images/green/greenHeadDW.bmp")
+                self.head_sprite = pygame.image.load("images/green/greenHeadDW.png")
+                if self.canDamage:
+                    self.head_sprite = pygame.image.load("images/green/headSwordDT.png")
+                if not self.isVulnerable:
+                    self.head_sprite = pygame.image.load("images/green/headShieldDT.png")
             elif self.moving_left:
-                self.head_sprite = pygame.image.load("images/green/greenHeadLT.bmp")
+                self.head_sprite = pygame.image.load("images/green/greenHeadLT.png")
+                if self.canDamage:
+                    self.head_sprite = pygame.image.load("images/green/headSwordLT.png")
+                if not self.isVulnerable:
+                    self.head_sprite = pygame.image.load("images/green/headShieldLT.png")
             elif self.moving_right:
-                self.head_sprite = pygame.image.load("images/green/greenHeadRT.bmp")
+                self.head_sprite = pygame.image.load("images/green/greenHeadRT.png")
+                if self.canDamage:
+                    self.head_sprite = pygame.image.load("images/green/headSwordRT.png")
+                if not self.isVulnerable:
+                    self.head_sprite = pygame.image.load("images/green/headShieldRT.png")
+
         elif self.player_num == 2:
             if self.moving_up:
-                self.head_sprite = pygame.image.load("images/blue/blueHead.bmp")
+                self.head_sprite = pygame.image.load("images/blue/blueHead.png")
+                if self.canDamage:
+                    self.head_sprite = pygame.image.load("images/blue/headSword.png")
+                if not self.isVulnerable:
+                    self.head_sprite = pygame.image.load("images/blue/headShield.png")
             elif self.moving_down:
-                self.head_sprite = pygame.image.load("images/blue/blueHeadDW.bmp")
+                self.head_sprite = pygame.image.load("images/blue/blueHeadDW.png")
+                if self.canDamage:
+                    self.head_sprite = pygame.image.load("images/blue/headSwordDT.png")
+                if not self.isVulnerable:
+                    self.head_sprite = pygame.image.load("images/blue/headShieldDT.png")
             elif self.moving_left:
-                self.head_sprite = pygame.image.load("images/blue/blueHeadLT.bmp")
+                self.head_sprite = pygame.image.load("images/blue/blueHeadLT.png")
+                if self.canDamage:
+                    self.head_sprite = pygame.image.load("images/blue/headSwordLT.png")
+                if not self.isVulnerable:
+                    self.head_sprite = pygame.image.load("images/blue/headShieldLT.png")
             elif self.moving_right:
-                self.head_sprite = pygame.image.load("images/blue/blueHeadRT.bmp")
+                self.head_sprite = pygame.image.load("images/blue/blueHeadRT.png")
+                if self.canDamage:
+                    self.head_sprite = pygame.image.load("images/blue/headSwordRT.png")
+                if not self.isVulnerable:
+                    self.head_sprite = pygame.image.load("images/blue/headShieldRT.png")
         self.rect = self.head_sprite.get_rect(center=self.lastLoc)
 
     def is_moving(self):
@@ -189,7 +221,7 @@ class Snabe():
 
         # If player collides with a body segment
         elif type(target) is Body:
-            if target in self.segments:
+            if target in self.segments and target.segment_number != 0:
                 if self.moving_up and target.centery < self.centery:
                     self.reduce_score(self.score - target.segment_number)
                 elif self.moving_down and target.centery > self.centery:
@@ -198,9 +230,10 @@ class Snabe():
                     self.reduce_score(self.score - target.segment_number)
                 elif self.moving_right and target.centerx > self.centerx:
                     self.reduce_score(self.score - target.segment_number)
-            else:
+
+            elif target.head != self:
                 if self.canDamage and target.head.isVulnerable:
-                    target.head.reduce_score(target.head.reduce_score(target.head.score - target.segment_number))
+                    target.head.reduce_score(target.head.score - target.segment_number)
                 else:
                     self.stunned = True
 
@@ -221,8 +254,6 @@ class Snabe():
                 elif self.rect.centery <= self.snabings.screen_height / 2:
                     self.set_direction("DOWN")
 
-
-
             self.lastLoc = (self.rect.centerx, self.rect.centery)
             self.turns[self.lastLoc] = self.get_direction()
 
@@ -231,7 +262,6 @@ class Snabe():
             self.set_direction(self.lastDirection)
             for x in self.segments:
                 x.set_direction(x.lastDirection)
-
 
     def augment_score(self, amount):
         self.score += amount
@@ -256,14 +286,10 @@ class Snabe():
 
     def check_powerups(self):
         if self.canDamage:
-            print("Sword active for player " + str(self.player_num))
             if self.snabings.timer_value == self.power_start_time - self.snabings.sword_time:
-                print("Sword expired")
                 self.canDamage = False
         if not self.isVulnerable:
-            print("Shield active for player " + str(self.player_num))
             if self.snabings.timer_value == self.power_start_time - self.snabings.shield_time:
-                print("Shield expired")
                 self.isVulnerable = True
 
     def first_move(self):

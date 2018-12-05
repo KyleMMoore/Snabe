@@ -41,14 +41,13 @@ class Body():
         self.snabings.entities.append(self)
         self.snabings.entities_rects.append(self.rect)
         self.global_index = len(self.snabings.entities_rects) - 1
-        print(len(self.snabings.entities_rects))
-        print(self.global_index)
 
     def update(self):
         try:
             self.global_index = self.snabings.entities_rects.index(self.rect)
         except ValueError:
-            print (str(self.rect) + " :: " + str(self.snabings.entities_rects[self.global_index]))
+            pass
+            #print (str(self.rect) + " :: " + str(self.snabings.entities_rects[self.global_index]))
 
         self.move()
         self.snabings.entities_rects[self.global_index] = self.rect
@@ -105,41 +104,41 @@ class Body():
 
         if self.is_last_segment:
             if self.moving_down:
-                sprite_path += "SnabeTailDT.bmp"
+                sprite_path += "SnabeTailDT.png"
             elif self.moving_left:
-                sprite_path += "SnabeTailLT.bmp"
+                sprite_path += "SnabeTailLT.png"
             elif self.moving_right:
-                sprite_path += "SnabeTailRT.bmp"
+                sprite_path += "SnabeTailRT.png"
             else:
-                sprite_path += "SnabeTail.bmp"
+                sprite_path += "SnabeTail.png"
 
         elif self.lastLoc in self.head.turns:
             new_direction = self.head.turns[self.lastLoc]
             if self.moving_up:
                 if new_direction == "LEFT":
-                    sprite_path += "SnabeTurnRD.bmp"
+                    sprite_path += "SnabeTurnRD.png"
                 elif new_direction == "RIGHT":
-                    sprite_path += "SnabeTurnLD.bmp"
+                    sprite_path += "SnabeTurnLD.png"
             elif self.moving_down:
                 if new_direction == "LEFT":
-                    sprite_path += "SnabeTurnRU.bmp"
+                    sprite_path += "SnabeTurnRU.png"
                 elif new_direction == "RIGHT":
-                    sprite_path += "SnabeTurnLU.bmp"
+                    sprite_path += "SnabeTurnLU.png"
             elif self.moving_left:
                 if new_direction == "UP":
-                    sprite_path += "SnabeTurnLU.bmp"
+                    sprite_path += "SnabeTurnLU.png"
                 elif new_direction == "DOWN":
-                    sprite_path += "SnabeTurnLD.bmp"
+                    sprite_path += "SnabeTurnLD.png"
             elif self.moving_right:
                 if new_direction == "UP":
-                    sprite_path += "SnabeTurnRU.bmp"
+                    sprite_path += "SnabeTurnRU.png"
                 elif new_direction == "DOWN":
-                    sprite_path += "SnabeTurnRD.bmp"
+                    sprite_path += "SnabeTurnRD.png"
         else:
             if self.moving_left or self.moving_right:
-                sprite_path += "SnabeBodyTurned.bmp"
+                sprite_path += "SnabeBodyTurned.png"
             else:
-                sprite_path += "SnabeBody.bmp"
+                sprite_path += "SnabeBody.png"
 
         try:
             self.segment_sprite = pygame.image.load(sprite_path)

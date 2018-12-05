@@ -8,7 +8,7 @@ class Food():
         self.snabings = snabings
         
         try:
-            self.food_sprite = pygame.image.load("images/items/food.bmp")
+            self.food_sprite = pygame.image.load("images/items/food.png")
         except:
             print("Failed to load food sprite: falling back on dummy.bmp")
             self.food_sprite = pygame.image.load("images/dummy.bmp")

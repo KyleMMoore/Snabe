@@ -11,7 +11,7 @@ class Wafer():
         self.power_type = "NONE"
         self.set_type()
         try:
-            self.food_sprite = pygame.image.load("images/items/wafer.bmp")
+            self.food_sprite = pygame.image.load("images/items/wafer.png")
         except:
             print("Failed to load wafer sprite. Falling back on dummy.bmp")
             self.food_sprite = pygame.image.load("images/dummy.bmp")

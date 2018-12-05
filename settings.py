@@ -19,7 +19,7 @@ class Settings():
 
         #constants to determine spawn rates (per n seconds)
         self.food_spawn_rate = 7
-        self.wafer_spawn_rate = 2
+        self.wafer_spawn_rate = 7
 
         #constants to determine each power-up's active time
         self.sword_time = 8
