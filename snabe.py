@@ -28,17 +28,8 @@ class Snabe():
         # Flipped to True while canDamage = False and player is colliding with opponent
         self.stunned = False
 
-        # load head sprite, get rect
-        try:
-            if self.player_num == 1:
-                self.head_sprite = pygame.image.load("images/green/greenHead.png")
-            elif self.player_num == 2:
-                self.head_sprite = pygame.image.load("images/blue/blueHead.png")
-        except:
-            print("Failed to load head sprite for player " + self.player_num + ": falling back on dummy.bmp")
-            self.head_sprite = pygame.image.load("images/dummy.bmp")
-        finally:
-            self.rect = self.head_sprite.get_rect()
+        self.head_sprite = pygame.image.load("images/dummy.bmp")
+        self.rect = self.head_sprite.get_rect()
 
         self.screen_rect = screen.get_rect()
 
@@ -54,14 +45,13 @@ class Snabe():
         self.centery = float(self.rect.centery)
 
         # help track the head
-        self.lastLoc = (self.centerx, self.centery)
+        self.lastLoc = (self.rect.centerx, self.rect.centery)
         self.lastDirection = "NONE"
+
+        self.drawSnabe()
 
         # Add head to the global entity list
         self.snabings.entities.append(self)
-        # Add head's rect to global rect list
-        self.snabings.entities_rects.append(self.rect)
-        self.global_index = len(self.snabings.entities_rects) - 1
 
         # a list to keep track of body segments
         self.segments = list()
@@ -70,13 +60,12 @@ class Snabe():
 
     def update(self):
         self.move()
-        #self.snabings.entities_rects[self.global_index] = self.rect
 
         # update the center values that the rect holds with the newly modified float versions
         self.rect.centerx = self.centerx
         self.rect.centery = self.centery
 
-        self.lastLoc = (self.centerx, self.centery)
+        self.lastLoc = (self.rect.centerx, self.rect.centery)
         self.lastDirection = self.get_direction()
 
         self.drawSnabe()
@@ -107,11 +96,12 @@ class Snabe():
             self.collision("WALL")
 
     def check_collisions(self):
-        colliding_entity = self.rect.collidelist(self.snabings.entities_rects)
-        if colliding_entity == -1 or self.snabings.entities[colliding_entity] == self:
+        colliding_entity = self.rect.collidelist([x.rect for x in self.snabings.entities])
+        if self.snabings.entities[colliding_entity] is self:
             self.stunned = False
             self.set_direction(self.lastDirection)
         else:
+            print(colliding_entity)
             self.collision(self.snabings.entities[colliding_entity])
 
     def blitme(self):
@@ -121,58 +111,36 @@ class Snabe():
             x.screen.blit(x.segment_sprite, x.rect)
 
     def drawSnabe(self):
+        sprite_path = "images/"
         if self.player_num == 1:
-            if self.moving_up:
-                self.head_sprite = pygame.image.load("images/green/greenHead.png")
-                if self.canDamage:
-                    self.head_sprite = pygame.image.load("images/green/headSword.png")
-                if not self.isVulnerable:
-                    self.head_sprite = pygame.image.load("images/green/headShield.png")
-            elif self.moving_down:
-                self.head_sprite = pygame.image.load("images/green/greenHeadDW.png")
-                if self.canDamage:
-                    self.head_sprite = pygame.image.load("images/green/headSwordDT.png")
-                if not self.isVulnerable:
-                    self.head_sprite = pygame.image.load("images/green/headShieldDT.png")
-            elif self.moving_left:
-                self.head_sprite = pygame.image.load("images/green/greenHeadLT.png")
-                if self.canDamage:
-                    self.head_sprite = pygame.image.load("images/green/headSwordLT.png")
-                if not self.isVulnerable:
-                    self.head_sprite = pygame.image.load("images/green/headShieldLT.png")
-            elif self.moving_right:
-                self.head_sprite = pygame.image.load("images/green/greenHeadRT.png")
-                if self.canDamage:
-                    self.head_sprite = pygame.image.load("images/green/headSwordRT.png")
-                if not self.isVulnerable:
-                    self.head_sprite = pygame.image.load("images/green/headShieldRT.png")
+            sprite_path += "green/"
+        else:
+            sprite_path += "blue/"
 
-        elif self.player_num == 2:
-            if self.moving_up:
-                self.head_sprite = pygame.image.load("images/blue/blueHead.png")
-                if self.canDamage:
-                    self.head_sprite = pygame.image.load("images/blue/headSword.png")
-                if not self.isVulnerable:
-                    self.head_sprite = pygame.image.load("images/blue/headShield.png")
-            elif self.moving_down:
-                self.head_sprite = pygame.image.load("images/blue/blueHeadDW.png")
-                if self.canDamage:
-                    self.head_sprite = pygame.image.load("images/blue/headSwordDT.png")
-                if not self.isVulnerable:
-                    self.head_sprite = pygame.image.load("images/blue/headShieldDT.png")
-            elif self.moving_left:
-                self.head_sprite = pygame.image.load("images/blue/blueHeadLT.png")
-                if self.canDamage:
-                    self.head_sprite = pygame.image.load("images/blue/headSwordLT.png")
-                if not self.isVulnerable:
-                    self.head_sprite = pygame.image.load("images/blue/headShieldLT.png")
-            elif self.moving_right:
-                self.head_sprite = pygame.image.load("images/blue/blueHeadRT.png")
-                if self.canDamage:
-                    self.head_sprite = pygame.image.load("images/blue/headSwordRT.png")
-                if not self.isVulnerable:
-                    self.head_sprite = pygame.image.load("images/blue/headShieldRT.png")
-        self.rect = self.head_sprite.get_rect(center=self.lastLoc)
+        if self.canDamage:
+            sprite_path += "headSword"
+        elif not self.isVulnerable:
+            sprite_path += "headShield"
+        else:
+            sprite_path += "head"
+
+        if self.moving_down:
+            sprite_path += "DT.png"
+        elif self.moving_left:
+            sprite_path += "LT.png"
+        elif self.moving_right:
+            sprite_path += "RT.png"
+        else:
+            sprite_path += ".png"
+
+        try:
+            self.head_sprite = pygame.image.load(sprite_path)
+        except:
+            print("Failed to load head sprite for player " + str(self.player_num))
+            print("Falling back on dummy.bmp")
+            self.head_sprite = pygame.image.load("images/dummy.bmp")
+        finally:
+            self.rect = self.head_sprite.get_rect(center=self.lastLoc)
 
     def is_moving(self):
         return not self.stunned
@@ -196,18 +164,7 @@ class Snabe():
     def collision(self, target):
         # If player collides with another Snabe head
         if type(target) is Snabe:
-            if target.isVulnerable and self.canDamage:
-                target.reduce_score(target.score)
-            elif not target.isVulnerable:
-                if self.moving_up:
-                    self.set_direction("LEFT")
-                elif self.moving_down:
-                    self.set_direction("RIGHT")
-                elif self.moving_left:
-                    self.set_direction("DOWN")
-                else:
-                    self.set_direction("UP")
-                self.turns[self.lastLoc] = self.get_direction()
+            pass
 
         # If player collides with a food pellet
         elif type(target) is Food:
@@ -240,7 +197,7 @@ class Snabe():
         # If player collides with screen boundaries
         elif target == "WALL":
             # Sets user score to 2
-            self.reduce_score(1)#self.score - 2)
+            self.reduce_score(self.score - 2)
 
             if self.moving_up or self.moving_down:
                 if self.rect.centerx > self.snabings.screen_width / 2:
@@ -257,6 +214,8 @@ class Snabe():
             self.lastLoc = (self.rect.centerx, self.rect.centery)
             self.turns[self.lastLoc] = self.get_direction()
 
+        # This occurs when no collision is detected
+        # Required to restart movement when an invulnerable enemy finishes moving past
         else:
             self.stunned = False
             self.set_direction(self.lastDirection)
@@ -271,7 +230,6 @@ class Snabe():
     def reduce_score(self, amount):
         self.score -= amount
         for x in range(amount):
-            #self.segments.remove(self.segments[len(self.segments) - x - 1])
             self.segments[-1].destroy()
 
     def stun(self):
@@ -293,4 +251,4 @@ class Snabe():
                 self.isVulnerable = True
 
     def first_move(self):
-        return not self.moving_down == self.moving_up == self.moving_left == self.moving_right
+        return self.moving_down == self.moving_up == self.moving_left == self.moving_right == self.stunned

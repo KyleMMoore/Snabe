@@ -39,18 +39,9 @@ class Body():
 
         # Stores segment and rect in the global lists
         self.snabings.entities.append(self)
-        self.snabings.entities_rects.append(self.rect)
-        self.global_index = len(self.snabings.entities_rects) - 1
 
     def update(self):
-        try:
-            self.global_index = self.snabings.entities_rects.index(self.rect)
-        except ValueError:
-            pass
-            #print (str(self.rect) + " :: " + str(self.snabings.entities_rects[self.global_index]))
-
         self.move()
-        self.snabings.entities_rects[self.global_index] = self.rect
 
         # update the center values that the rect holds with the newly modified float versions
         self.rect.centerx = self.centerx
@@ -165,8 +156,6 @@ class Body():
 
     def destroy(self):
         print(self.segment_number)
-        pos = self.snabings.entities.index(self)
-        self.snabings.entities_rects.pop(pos)
         self.snabings.entities.remove(self)
         self.head.segments.remove(self)
         self.previous_segment.is_last_segment = True

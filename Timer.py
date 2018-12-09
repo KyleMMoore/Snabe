@@ -28,7 +28,7 @@ class Timer():
 
         # load image and rect for left digit
         try:
-            self.left_digit = pygame.image.load("images/timer/timer_0.png")
+            self.left_digit = pygame.image.load("images/timer/zero.png")
         except:
             print("Failed to load timer left digit sprite. Falling back on dummy.bmp")
             self.left_digit = pygame.image.load("images/dummy.bmp")
@@ -41,7 +41,7 @@ class Timer():
 
         # load image and rect for right digit
         try:
-            self.right_digit = pygame.image.load("images/timer/timer_0.png")
+            self.right_digit = pygame.image.load("images/timer/zero.png")
         except:
             print("Failed to load timer right digit sprite. Falling back on dummy.bmp")
             self.right_digit = pygame.image.load("images/dummy.bmp")
@@ -51,6 +51,7 @@ class Timer():
         # offset the digit to the right side of timer
         self.right_digit_rect.centerx = self.screen_rect.centerx + 15
         self.right_digit_rect.top = self.screen_rect.top + 32
+        self.tick()
 
     # updates timer image to given time
     # converts int to image

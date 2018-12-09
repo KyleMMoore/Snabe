@@ -7,7 +7,6 @@ from food import Food
 from wafer import Wafer
 
 import global_functions as gf
-from threading import Thread
 
 def run_game():
     pygame.init()
@@ -25,7 +24,7 @@ def run_game():
     #entities_rects = list()
 
     snabe1 = Snabe(screen, snabings, 1)
-    snabe2 = Snabe(screen, snabings,2)
+    snabe2 = Snabe(screen, snabings, 2)
 
     # list of food pellets to be displayed
     snabings.food_list.append(Food(screen, snabings))
@@ -51,7 +50,9 @@ def run_game():
         "wafer": -1,
     }
 
-    while True:
+    for x in snabings.entities:
+        print(str(type(x)) + ": " + str(x.rect.centerx) + ", " + str(x.rect.centery))
+    while snabings.timer_value != 0:
         # establishes tick rate for game
         clock.tick(tick_rate)
 
@@ -82,7 +83,7 @@ def run_game():
             snabings.timer_value -=1
         else:
             snabings.timer_value = 0
-            endScreen()
+
         ####################################
 
         # this segment is responsible for spawning food
@@ -96,6 +97,7 @@ def run_game():
         if ticks["wafer"] == snabings.wafer_spawn_rate:
             snabings.wafer_list.append(Wafer(screen, snabings))
             ticks["wafer"] = 0
+    endScreen()
 
 def startScreen():
     pygame.init()
@@ -122,10 +124,10 @@ def startScreen():
     logo_rect.right = screen_rect.left
     logo_rect.centery = snabings.screen_height // 6
 
-    snabe_text = pygame.image.load("images/menu/nabe.png")
-    snabe_text_rect = snabe_text.get_rect()
-    snabe_text_rect.left = screen_rect.right
-    snabe_text_rect.centery = snabings.screen_height // 4
+    #snabe_text = pygame.image.load("images/menu/nabe.png")
+    #snabe_text_rect = snabe_text.get_rect()
+    #snabe_text_rect.left = screen_rect.right
+    #snabe_text_rect.centery = snabings.screen_height // 4
 
     while True:
         clock.tick(14)
