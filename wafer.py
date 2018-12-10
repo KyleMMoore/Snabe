@@ -1,12 +1,14 @@
 import pygame
 from random import randint
+from global_toolbox import GlobalSettings
 
 class Wafer():
 
-    def __init__(self, screen, snabings):
+    def __init__(self, screen, global_vars):
         self.screen = screen
         self.screen_rect = screen.get_rect()
-        self.snabings = snabings
+        self.snabings = GlobalSettings()
+        self.gv = global_vars
 
         self.power_type = "NONE"
         self.set_type()
@@ -19,8 +21,7 @@ class Wafer():
             self.rect = self.food_sprite.get_rect()
 
         self.chooseLocation()
-        self.snabings.entities.append(self)
-        self.snabings.entities_rects.append(self.rect)
+        self.gv.entities.append(self)
 
     def set_type(self):
         switch = {
@@ -49,6 +50,8 @@ class Wafer():
 
     def destroy(self):
         print(self.get_type())
-        self.snabings.wafer_list.remove(self)
-        self.snabings.entities.remove(self)
-        self.snabings.entities_rects.remove(self.rect)
+        self.gv.wafer_list.remove(self)
+        self.gv.entities.remove(self)
+
+    def __repr__(self):
+        return str(type(self)) + ": " + str(self.getLocation()) + ": " + str(self.gv.entities.index(self))

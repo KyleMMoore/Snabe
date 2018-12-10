@@ -1,16 +1,19 @@
 import pygame
-
+from global_toolbox import GlobalSettings
 
 class Body():
-    def __init__(self, screen, snabings, head, segment_number):
+    def __init__(self, screen, head, global_vars, segment_number):
+        # Useful game elements
         self.screen = screen
         self.screen_rect = self.screen.get_rect()
-        self.snabings = snabings
+        self.snabings = GlobalSettings()
+        self.gv = global_vars
+
+        # Info and stats
         self.speed = head.speed
         self.head = head
         self.segment_number = segment_number
         self.is_last_segment = self.segment_number == self.head.score
-        self.lastLoc = (0,0)
 
         # store previous segment for future reference
         if self.segment_number == 0:
@@ -25,21 +28,28 @@ class Body():
         self.moving_left = self.previous_segment.moving_left
         self.moving_right = self.previous_segment.moving_right
 
+        # Keeps track of player's last location
+        # Given a real value when drawSegment is called for the first time
+        self.lastLoc = (0, 0)
+        # Keeps track of player's last direction of movement
+        self.lastDirection = "UP"
+
+        # Chooses the segment sprite and creates a rect
         self.drawSegment()
 
         # Appropriately connects this segment to the previous
         self.connect()
 
-        # float values for centers, allows us to do math easily
+        # Float values for centers, allows us to do math easily
         self.centerx = float(self.rect.centerx)
         self.centery = float(self.rect.centery)
 
-        self.lastLoc = (self.centerx, self.centery)
-        self.lastDirection = "NONE"
+        # Stores segment in the global list
+        self.gv.entities.append(self)
 
-        # Stores segment and rect in the global lists
-        self.snabings.entities.append(self)
-
+    ######################
+    # Core functionality #
+    ######################
     def update(self):
         self.move()
 
@@ -47,45 +57,24 @@ class Body():
         self.rect.centerx = self.centerx
         self.rect.centery = self.centery
         self.lastLoc = (self.rect.centerx, self.rect.centery)
+
         if not self.head.stunned:
             self.lastDirection = self.get_direction()
             self.drawSegment()
+        else:
+            self.connect()
+
+        if self.segment_number == self.head.score and not self.is_last_segment:
+           self.is_last_segment = True
 
         if self.lastLoc in self.head.turns:
             self.turn(self.head.turns[self.lastLoc])
 
-    def move(self):
-        if self.head.is_moving():
-            if self.moving_up:
-                self.centery -= self.speed
-            if self.moving_down:
-                self.centery += self.speed
-            if self.moving_left:
-                self.centerx -= self.speed
-            if self.moving_right:
-                self.centerx += self.speed
+    # Draws segment on-screen
+    def blitme(self):
+        self.screen.blit(self.segment_sprite, self.rect)
 
-    def turn(self, new_direction):
-        self.set_direction(new_direction)
-        if self.is_last_segment:
-            del self.head.turns[(self.centerx, self.centery)]
-
-    def get_direction(self):
-        if self.moving_up:
-            return "UP"
-        if self.moving_down:
-            return "DOWN"
-        if self.moving_left:
-            return "LEFT"
-        if self.moving_right:
-            return "RIGHT"
-
-    def set_direction(self, new_direction):
-        self.moving_up = new_direction == "UP"
-        self.moving_down = new_direction == "DOWN"
-        self.moving_left = new_direction == "LEFT"
-        self.moving_right = new_direction == "RIGHT"
-
+    # Chooses appropriate sprite based on direction, turning status, and segment number
     def drawSegment(self):
         sprite_path = "images/"
         if self.head.player_num == 1:
@@ -139,6 +128,59 @@ class Body():
         finally:
             self.rect = self.segment_sprite.get_rect(center=self.lastLoc)
 
+    # Removes segment from global list, head list, and screen
+    def destroy(self):
+        print(self.segment_number)
+        self.gv.entities.remove(self)
+        self.head.segments.remove(self)
+        self.rect.centerx = self.rect.centery = -1
+
+    # Allows segment to be printed to console
+    # Prints type, last location, and global index number
+    def __repr__(self):
+        return str(type(self)) + ": " + str(self.lastLoc) + ": " + str(self.gv.entities.index(self))
+
+    #############################
+    # Movement/positioning code #
+    #############################
+    def move(self):
+        if self.head.is_moving():
+            if self.moving_up:
+                self.centery -= self.speed
+            if self.moving_down:
+                self.centery += self.speed
+            if self.moving_left:
+                self.centerx -= self.speed
+            if self.moving_right:
+                self.centerx += self.speed
+
+    # If current location is a turning location, change directions
+    # Last segment removes the turning point from the list
+    # This keeps the list of turns from getting huge and causing problems
+    def turn(self, new_direction):
+        self.set_direction(new_direction)
+        if self.is_last_segment:
+            del self.head.turns[(self.centerx, self.centery)]
+
+    def set_direction(self, new_direction):
+        self.moving_up = new_direction == "UP"
+        self.moving_down = new_direction == "DOWN"
+        self.moving_left = new_direction == "LEFT"
+        self.moving_right = new_direction == "RIGHT"
+
+    def get_direction(self):
+        if self.moving_up:
+            return "UP"
+        if self.moving_down:
+            return "DOWN"
+        if self.moving_left:
+            return "LEFT"
+        if self.moving_right:
+            return "RIGHT"
+
+    # Connects sprite to its previous segment
+    # Based on direction, sets one side of self to adjacent side of previous segment
+    # Also ensures center stays aligned
     def connect(self):
         if self.moving_down:
             self.rect.bottom = self.previous_segment.rect.top
@@ -153,14 +195,6 @@ class Body():
             self.rect.top = self.previous_segment.rect.bottom
             self.rect.centerx = self.previous_segment.rect.centerx
         self.lastLoc = (self.rect.centerx, self.rect.centery)
-
-    def destroy(self):
-        print(self.segment_number)
-        self.snabings.entities.remove(self)
-        self.head.segments.remove(self)
-        self.previous_segment.is_last_segment = True
-        self.rect.centerx = self.rect.centery = -1
-
 
 
 

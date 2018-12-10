@@ -1,11 +1,13 @@
 import pygame
 from random import randint
+from global_toolbox import GlobalSettings
 
 class Food():
-    def __init__(self, screen, snabings):
+    def __init__(self, screen, global_vars):
         self.screen = screen
         self.screen_rect = screen.get_rect()
-        self.snabings = snabings
+        self.snabings = GlobalSettings()
+        self.gv = global_vars
         
         try:
             self.food_sprite = pygame.image.load("images/items/food.png")
@@ -16,8 +18,7 @@ class Food():
             self.rect = self.food_sprite.get_rect()
 
         self.chooseLocation()
-        self.snabings.entities.append(self)
-        self.snabings.entities_rects.append(self.rect)
+        self.gv.entities.append(self)
 
     def chooseLocation(self):
         self.rect.centerx = randint(0, self.snabings.screen_width)
@@ -35,6 +36,8 @@ class Food():
         self.screen.blit(self.food_sprite, self.rect)
 
     def destroy(self):
-        self.snabings.food_list.remove(self)
-        self.snabings.entities.remove(self)
-        self.snabings.entities_rects.remove(self.rect)
+        self.gv.food_list.remove(self)
+        self.gv.entities.remove(self)
+
+    def __repr__(self):
+        return str(type(self)) + ": " + str(self.getLocation()) + ": " + str(self.gv.entities.index(self))

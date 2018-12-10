@@ -1,34 +1,30 @@
 import sys
 import pygame
-from settings import Settings
+from global_toolbox import GlobalSettings, GlobalFunctions, GlobalVars
 from snabe import Snabe
 from Timer import Timer
 from food import Food
 from wafer import Wafer
 
-import global_functions as gf
 
 def run_game():
     pygame.init()
 
     #settings/constants file
-    snabings = Settings()
+    snabings = GlobalSettings()
+    gv = GlobalVars()
+    gf = GlobalFunctions(gv)
+
     screen = pygame.display.set_mode((snabings.screen_width, snabings.screen_height))
-    screen_rect = screen.get_rect()
     pygame.display.set_caption("Snabe")
+    pygame.display.set_icon(pygame.image.load("images/menu/snabeSlither4.png"))
 
-    # Creates a dict to hold all currently existing entities as values and their rects as keys
-    #entities = list()
-
-    # Creates a dict where keys are entity centerpoints and values are entity rects
-    #entities_rects = list()
-
-    snabe1 = Snabe(screen, snabings, 1)
-    snabe2 = Snabe(screen, snabings, 2)
+    snabe1 = Snabe(screen, gv, 1)
+    snabe2 = Snabe(screen, gv, 2)
 
     # list of food pellets to be displayed
-    snabings.food_list.append(Food(screen, snabings))
-    snabings.food_list[0].setLocation(snabings.screen_width//2,snabings.screen_height//2)
+    gv.food_list.append(Food(screen, gv))
+    gv.food_list[0].setLocation(snabings.screen_width//2, snabings.screen_height//2)
 
     # timer class object
     game_timer = Timer(screen, snabings.game_length)
@@ -39,30 +35,20 @@ def run_game():
     # global tick rate established in settings.py
     tick_rate = snabings.tick_rate
 
-    # length to be displayed on timer
-    game_length = snabings.game_length
-
     # keeps track of tick counts
     ticks = {
-        "initial": snabings.timer_value,
+        "initial": gv.timer_value,
         "timer": 0,
         "food": -1,
         "wafer": -1,
     }
 
-    for x in snabings.entities:
-        print(str(type(x)) + ": " + str(x.rect.centerx) + ", " + str(x.rect.centery))
-    while snabings.timer_value != 0:
+    while gv.timer_value != 0 and snabe1.score != 0 and snabe2.score != 0:
         # establishes tick rate for game
         clock.tick(tick_rate)
 
         gf.check_events(snabe1, snabe2)
-
-        #TODO: use the global entities list to update the screen?
-        # -Kyle
-        #TODO: store EVERYTHING in settings.py? That way all we pass is snabings
-        # -Kyle pt. 2
-        gf.update_screen(snabings, screen, snabe1, snabe2, game_timer)
+        gf.update_screen(screen, game_timer)
 
         snabe1.update()
         snabe2.update()
@@ -77,33 +63,34 @@ def run_game():
             ticks["food"] += 1
             ticks["wafer"] += 1
             ticks["timer"] = 0
-            ticks["initial"] = snabings.timer_value
+            ticks["initial"] = gv.timer_value
 
-        if snabings.timer_value >= 1:
-            snabings.timer_value -=1
+        if gv.timer_value >= 1:
+            gv.timer_value -= 1
         else:
-            snabings.timer_value = 0
+            gv.timer_value = 0
 
         ####################################
 
         # this segment is responsible for spawning food
         # every n seconds
         if ticks["food"] == snabings.food_spawn_rate:
-            snabings.food_list.append((Food(screen, snabings)))
+            gv.food_list.append((Food(screen, gv)))
             ticks["food"] = 0
 
         # this segment spawns a power-up wafer
         # every n seconds
         if ticks["wafer"] == snabings.wafer_spawn_rate:
-            snabings.wafer_list.append(Wafer(screen, snabings))
+            gv.wafer_list.append(Wafer(screen, gv))
             ticks["wafer"] = 0
     endScreen()
+
 
 def startScreen():
     pygame.init()
 
     #settings/constants file
-    snabings = Settings()
+    snabings = GlobalSettings()
     screen = pygame.display.set_mode((snabings.screen_width, snabings.screen_height))
     screen_rect = screen.get_rect()
     pygame.display.set_caption("Snabe")
@@ -123,11 +110,6 @@ def startScreen():
     logo_rect = snabe_logo.get_rect()
     logo_rect.right = screen_rect.left
     logo_rect.centery = snabings.screen_height // 6
-
-    #snabe_text = pygame.image.load("images/menu/nabe.png")
-    #snabe_text_rect = snabe_text.get_rect()
-    #snabe_text_rect.left = screen_rect.right
-    #snabe_text_rect.centery = snabings.screen_height // 4
 
     while True:
         clock.tick(14)
@@ -159,14 +141,16 @@ def startScreen():
         startRect = startPrompt.get_rect()
         startRect.centerx = screen_rect.centerx
         startRect.centery = screen_rect.centery
-        screen.blit(startPrompt,startRect)
+        screen.blit(startPrompt, startRect)
 
         pygame.display.flip()
+
+
 def endScreen():
     pygame.init()
 
     #settings/constants file
-    snabings = Settings()
+    snabings = GlobalSettings()
     screen = pygame.display.set_mode((snabings.screen_width, snabings.screen_height))
     screen_rect = screen.get_rect()
     pygame.display.set_caption("Snabe")
@@ -206,5 +190,6 @@ def endScreen():
         screen.blit(menuPrompt,menuRect)
         screen.blit(winnerPrompt, winnerRect)
         pygame.display.flip()
+
+
 startScreen()
-run_game()
