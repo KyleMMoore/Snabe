@@ -13,7 +13,10 @@ class Snabe():
         # Allows us to calculate locations based on the screen edges
         self.screen_rect = screen.get_rect()
 
+        # Adjust screen rect to encompass only the playable area
+        self.screen_rect.height = self.snabings.screen_height - self.snabings.play_area_height
         self.screen_rect.top = self.snabings.play_area_height
+        self.screen_rect.bottom = self.snabings.screen_height
 
         #Info and stats
         self.player_num = player_num
