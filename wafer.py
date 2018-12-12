@@ -10,8 +10,12 @@ class Wafer():
         self.snabings = GlobalSettings()
         self.gv = global_vars
 
+        # default power-up state
         self.power_type = "NONE"
+        # assigns power-up state
         self.set_type()
+
+        # Attempts to load wafer image
         try:
             self.food_sprite = pygame.image.load("images/items/wafer.png")
         except:
@@ -28,7 +32,12 @@ class Wafer():
             0: "SWORD",
             1: "SHIELD",
         }
-        self.power_type= switch.get(randint(0,1))
+        roll = randint(1,100)
+
+        if roll <= self.snabings.shield_rate:
+            self.power_type = switch.get(1)
+        elif roll > self.snabings.shield_rate:
+            self.power_type= switch.get(0)
 
     def get_type(self):
         return self.power_type
