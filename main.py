@@ -91,13 +91,16 @@ def startScreen():
 
     #settings/constants file
     snabings = GlobalSettings()
+
     screen = pygame.display.set_mode((snabings.screen_width, snabings.screen_height))
     screen_rect = screen.get_rect()
     pygame.display.set_caption("Snabe")
     screen.fill(snabings.background_color)
 
+    #used to regulate the animation speed
     clock = pygame.time.Clock()
 
+    #dict that contains the current frame used in the animation and image paths
     snabeSlither = {
         "frame": 1,
         1: "images/menu/snabeSlither1.png",
@@ -106,12 +109,15 @@ def startScreen():
         4: "images/menu/snabeSlither4.png",
     }
 
+    #creates the logo object that crawls into view
+    #positions logo off screen
     snabe_logo = pygame.image.load(snabeSlither[snabeSlither["frame"]])
     logo_rect = snabe_logo.get_rect()
     logo_rect.right = screen_rect.left
     logo_rect.centery = snabings.screen_height // 6
 
     while True:
+        #sets gamespeed(animation speed) to 14 FPS
         clock.tick(14)
         screen.fill(snabings.background_color)
         for event in pygame.event.get():
@@ -124,6 +130,7 @@ def startScreen():
         #######################################################################
         # Snabe Slither Animation                                             #
         #######################################################################
+        #shuffles through current frame and applies them to object
         if snabeSlither["frame"] == 4:
             snabeSlither["frame"] = 1
         else:
@@ -135,6 +142,8 @@ def startScreen():
         snabe_logo = pygame.image.load(snabeSlither[snabeSlither["frame"]])
         screen.blit(snabe_logo, logo_rect)
         #######################################################################
+        # Renders text prompt to screen                                       #
+        #######################################################################
         pygame.font.init()
         myfont = pygame.font.SysFont('Courier', 30)
         startPrompt = myfont.render('Welcome to Snabe! Press Space to Start!',False, (0,0,0))
@@ -143,19 +152,21 @@ def startScreen():
         startRect.centery = screen_rect.centery
         screen.blit(startPrompt, startRect)
 
+        #updates display
         pygame.display.flip()
 
 
 def endScreen():
     pygame.init()
 
-    #settings/constants file
+    #settings object
     snabings = GlobalSettings()
     screen = pygame.display.set_mode((snabings.screen_width, snabings.screen_height))
     screen_rect = screen.get_rect()
     pygame.display.set_caption("Snabe")
     screen.fill(snabings.background_color)
     pygame.display.flip()
+
     while True:
         screen.fill(snabings.background_color)
         for event in pygame.event.get():
@@ -168,6 +179,9 @@ def endScreen():
                     startScreen()
         pygame.font.init()
 
+        #########################################################################################
+        #       Renders text prompts for end screen                                             #
+        #########################################################################################
         myfont = pygame.font.SysFont('Courier', 30)
         restartPrompt = myfont.render('Game over! Press Space to Play Again!', False, (0, 0, 0))
         restartRect = restartPrompt.get_rect()
