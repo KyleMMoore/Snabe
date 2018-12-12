@@ -13,6 +13,8 @@ class Snabe():
         # Allows us to calculate locations based on the screen edges
         self.screen_rect = screen.get_rect()
 
+        self.screen_rect.top = self.snabings.play_area_height
+
         #Info and stats
         self.player_num = player_num
         self.speed = self.snabings.base_speed
@@ -145,7 +147,7 @@ class Snabe():
             pass
 
         # snabe moves in the direction that the flags indicate
-        elif self.rect.top > 0 and self.rect.bottom < self.screen_rect.bottom and self.rect.left > 0 \
+        elif self.rect.top > self.screen_rect.top and self.rect.bottom < self.screen_rect.bottom and self.rect.left > self.screen_rect.left \
                 and self.rect.right < self.screen_rect.right:
             if self.moving_up:
                 self.centery -= self.speed
