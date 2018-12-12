@@ -17,26 +17,40 @@ class GlobalSettings:
         self.screen_height = 800
         self.background_color = (255, 255, 255)
 
+        self.play_area_height = 140
+
+        self.background_image = pygame.image.load("images/background/background.png")
+        self.background_rect = self.background_image.get_rect()
+
         #snabe speed
-        #TODO: Fix algorithm(s) to work with dif speed
-        #ideal speed seems to be 2-3
         self.base_speed = 1
 
         #constants for calculating game speed:time
+        # MAX GAME LENGTH IS 99, ANYTHING HIGHER IS SET TO 99
+        # Minimum playable game time is 1, anything lower and the game goes straight to end menu
         self.tick_rate = 150
-        self.game_length = 45
+        self.game_length = 60
 
         #constants to determine spawn rates (per n seconds)
         self.food_spawn_rate = 2
         self.wafer_spawn_rate = 7
 
         #constants to determine each power-up's active time
-        self.sword_time = 8
-        self.shield_time = 12
+        self.sword_time = 6
+        self.shield_time = 10
+
+        #constants to determine each power-up's spawn rate
+        #value is displayed as a percentage of 100
+        self.sword_rate = 75
+        self.shield_rate = 25
 
         #calculations that regulate seconds:tick rate
         self.sword_time = self.sword_time * self.tick_rate
         self.shield_time = self.shield_time * self.tick_rate
+
+        #sets location of background image
+        self.background_rect.centerx = self.screen_width//2
+        self.background_rect.centery = self.screen_height//2
 
 
 # Contains some functions used by the game itself
@@ -48,6 +62,7 @@ class GlobalFunctions:
     # Keeps things drawn on the screen
     def update_screen(self, screen, timer):
         screen.fill(self.snabings.background_color)
+        screen.blit(self.snabings.background_image,self.snabings.background_rect)
         timer.blitme()
         for x in self.gv.entities:
             x.blitme()
