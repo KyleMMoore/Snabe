@@ -24,7 +24,7 @@ class Food():
     # Food chooses a random location to spawn within a few limitations
     def chooseLocation(self):
         self.rect.centerx = randint(0, self.snabings.screen_width)
-        self.rect.centery = randint(self.snabings.screen_height//8, self.snabings.screen_height)
+        self.rect.centery = randint(self.snabings.play_area_height+10, self.snabings.screen_height)
 
     # Manually set the location of a food pellet
     # Mainly used for the initial spawn

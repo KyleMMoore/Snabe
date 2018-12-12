@@ -44,7 +44,7 @@ class Wafer():
 
     def chooseLocation(self):
         self.rect.centerx = randint(0, self.snabings.screen_width)
-        self.rect.centery = randint(self.snabings.screen_height//8, self.snabings.screen_height)
+        self.rect.centery = randint(self.snabings.play_area_height+10, self.snabings.screen_height)
 
     def setLocation(self, x, y):
         self.rect.centerx = x
