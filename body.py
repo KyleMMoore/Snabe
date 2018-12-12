@@ -32,7 +32,7 @@ class Body():
         # Given a real value when drawSegment is called for the first time
         self.lastLoc = (0, 0)
         # Keeps track of player's last direction of movement
-        self.lastDirection = "UP"
+        self.lastDirection = ""
 
         # Chooses the segment sprite and creates a rect
         self.drawSegment()
@@ -58,15 +58,15 @@ class Body():
         self.rect.centery = self.centery
         self.lastLoc = (self.rect.centerx, self.rect.centery)
 
+        # Keeps the lastDirection field and sprite up to date
         if not self.head.stunned:
             self.lastDirection = self.get_direction()
             self.drawSegment()
+        # Prevents the head from moving slightly away from the body while stunned
         else:
             self.connect()
 
-        if self.segment_number == self.head.score and not self.is_last_segment:
-           self.is_last_segment = True
-
+        # If segment is on a turning point, turn
         if self.lastLoc in self.head.turns:
             self.turn(self.head.turns[self.lastLoc])
 
@@ -114,6 +114,7 @@ class Body():
                     sprite_path += "SnabeTurnRU.png"
                 elif new_direction == "DOWN":
                     sprite_path += "SnabeTurnRD.png"
+
         else:
             if self.moving_left or self.moving_right:
                 sprite_path += "SnabeBodyTurned.png"
@@ -130,10 +131,10 @@ class Body():
 
     # Removes segment from global list, head list, and screen
     def destroy(self):
-        print(self.segment_number)
         self.gv.entities.remove(self)
         self.head.segments.remove(self)
         self.rect.centerx = self.rect.centery = -1
+        self.blitme()
 
     # Allows segment to be printed to console
     # Prints type, last location, and global index number

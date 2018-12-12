@@ -147,7 +147,9 @@ class Snabe():
             pass
 
         # snabe moves in the direction that the flags indicate
-        elif self.rect.top > self.screen_rect.top and self.rect.bottom < self.screen_rect.bottom and self.rect.left > self.screen_rect.left \
+        elif self.rect.top > self.screen_rect.top \
+                and self.rect.bottom < self.screen_rect.bottom \
+                and self.rect.left > self.screen_rect.left \
                 and self.rect.right < self.screen_rect.right:
             if self.moving_up:
                 self.centery -= self.speed
@@ -184,21 +186,24 @@ class Snabe():
     # If the new direction does not match the old,
     # adds the location and new direction to the turns dict
     def set_direction(self, new_direction):
+        fm = self.first_move()
+
         self.moving_up = new_direction == "UP"
         self.moving_down = new_direction == "DOWN"
         self.moving_left = new_direction == "LEFT"
         self.moving_right = new_direction == "RIGHT"
-        if new_direction != self.lastDirection:
+
+        if new_direction != self.lastDirection and not (new_direction == "UP" and fm):
             self.turns[self.lastLoc] = new_direction
 
     ####################
     # Check for events #
     ####################
     def check_collisions(self):
-        # Locally recreates list of entities without self
+        # Locally recreates list of entities without self and first segment
         entities = list()
         for x in self.gv.entities:
-            if x != self:
+            if x != self and x != self.segments[0]:
                 entities.append(x)
 
         # Stores the index of the entity that is being collided with in the local list
@@ -331,8 +336,11 @@ class Snabe():
     # Removes a segment from the end of the snabe for each point removed, decrements player score
     def __sub__(self, amount):
         self.score -= amount
-        for x in range(amount):
+        # Due to a strange positioning bug that refuses to go away,
+        # the tail will only connect if we remove an extra segment and recreate it
+        for x in range(amount + 1):
             self.segments[-1].destroy()
+        self.segments.append(Body(self.screen, self, self.gv, self.score))
         return self
 
     # When snabe instance is printed, will return its type, last location,
