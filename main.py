@@ -114,12 +114,17 @@ def startScreen():
         4: "images/menu/snabeSlither4.png",
     }
 
-    #creates the logo object that crawls into view
-    #positions logo off screen
-    snabe_logo = pygame.image.load(snabeSlither[snabeSlither["frame"]])
-    logo_rect = snabe_logo.get_rect()
-    logo_rect.right = screen_rect.left
-    logo_rect.centery = snabings.screen_height // 6
+    # creates the logo object that crawls into view
+    # positions logo off screen
+    # attempt to load image
+    try:
+        snabe_logo = pygame.image.load(snabeSlither[snabeSlither["frame"]])
+    except:
+        print("Failed to load logo sprite: falling back on dummy.bmp")
+    finally:
+        logo_rect = snabe_logo.get_rect()
+        logo_rect.right = screen_rect.left
+        logo_rect.centery = snabings.screen_height // 6
 
     while True:
         #sets gamespeed(animation speed) to 14 FPS
@@ -144,8 +149,12 @@ def startScreen():
             logo_rect.centerx = screen_rect.centerx
         else:
             logo_rect.centerx += 10
-        snabe_logo = pygame.image.load(snabeSlither[snabeSlither["frame"]])
-        screen.blit(snabe_logo, logo_rect)
+        try:
+            snabe_logo = pygame.image.load(snabeSlither[snabeSlither["frame"]])
+        except:
+            print("Failed to load frame in logo animation: falling back on dummy.bmp")
+        finally:
+            screen.blit(snabe_logo, logo_rect)
         #######################################################################
         # Renders text prompt to screen                                       #
         #######################################################################
