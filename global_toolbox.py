@@ -110,7 +110,6 @@ class GlobalFunctions:
 
                 elif event.key == pygame.K_RIGHT and not snabe2.moving_left and not snabe2.moving_right:
                     snabe2.set_direction("RIGHT")
-                print(snabe2.turns)
 
 
 

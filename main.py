@@ -6,7 +6,6 @@ from Timer import Timer
 from food import Food
 from wafer import Wafer
 
-
 def run_game():
     pygame.init()
 
@@ -18,6 +17,7 @@ def run_game():
     screen = pygame.display.set_mode((snabings.screen_width, snabings.screen_height))
     pygame.display.set_caption("Snabe")
     pygame.display.set_icon(pygame.image.load("images/menu/snabeSlither4.png"))
+
 
     snabe1 = Snabe(screen, gv, 1)
     snabe2 = Snabe(screen, gv, 2)
@@ -48,10 +48,11 @@ def run_game():
         clock.tick(tick_rate)
 
         gf.check_events(snabe1, snabe2)
-        gf.update_screen(screen, game_timer)
 
         snabe1.update()
         snabe2.update()
+
+        gf.update_screen(screen, game_timer)
 
         ####################################
         # Accounts for the amount of ticks #
