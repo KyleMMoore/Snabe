@@ -60,10 +60,12 @@ class GlobalFunctions:
         self.gv = global_vars
 
     # Keeps things drawn on the screen
-    def update_screen(self, screen, timer):
+    def update_screen(self, screen, timer, scoreboard):
         screen.fill(self.snabings.background_color)
         screen.blit(self.snabings.background_image,self.snabings.background_rect)
         timer.blitme()
+        for a in scoreboard:
+            a.blitme()
         for x in self.gv.entities:
             x.blitme()
 

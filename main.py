@@ -5,7 +5,7 @@ from snabe import Snabe
 from Timer import Timer
 from food import Food
 from wafer import Wafer
-
+from Score import Score
 
 def run_game():
     pygame.init()
@@ -29,6 +29,9 @@ def run_game():
     # timer class object
     game_timer = Timer(screen, snabings.game_length)
 
+    # score objects
+    scoreboard = [Score(screen,snabe1.score, "LEFT"),Score(screen,snabe2.score, "RIGHT")]
+
     #established to regulate game speed
     clock = pygame.time.Clock()
 
@@ -48,10 +51,12 @@ def run_game():
         clock.tick(tick_rate)
 
         gf.check_events(snabe1, snabe2)
-        gf.update_screen(screen, game_timer)
+        gf.update_screen(screen, game_timer, scoreboard)
 
         snabe1.update()
         snabe2.update()
+        scoreboard[0].update(snabe1.score)
+        scoreboard[1].update(snabe2.score)
 
         ####################################
         # Accounts for the amount of ticks #
@@ -83,7 +88,7 @@ def run_game():
         if ticks["wafer"] == snabings.wafer_spawn_rate:
             gv.wafer_list.append(Wafer(screen, gv))
             ticks["wafer"] = 0
-    endScreen()
+    endScreen(snabe1, snabe2)
 
 
 def startScreen():
@@ -156,7 +161,7 @@ def startScreen():
         pygame.display.flip()
 
 
-def endScreen():
+def endScreen(snabe1, snabe2):
     pygame.init()
 
     #settings object
@@ -182,20 +187,32 @@ def endScreen():
         #########################################################################################
         #       Renders text prompts for end screen                                             #
         #########################################################################################
+
+        #render play again prompy
         myfont = pygame.font.SysFont('Courier', 30)
         restartPrompt = myfont.render('Game over! Press Space to Play Again!', False, (0, 0, 0))
         restartRect = restartPrompt.get_rect()
         restartRect.centerx = screen_rect.centerx
         restartRect.centery = screen_rect.centery
 
+        #Render main menu prompt
         myfont = pygame.font.SysFont('Courier', 20)
         menuPrompt = myfont.render('Press Esc to go back to the main menu', False, (0, 0, 0))
         menuRect = menuPrompt.get_rect()
         menuRect.centerx = screen_rect.centerx
         menuRect.top = restartRect.bottom
 
+        #compare snake scores to determine the winner to announce
+        if snabe1.score > snabe2.score:
+            winner = "Green Wins!"
+        elif snabe2.score > snabe1.score:
+            winner = "Blue Wins!"
+        elif snabe1.score == snabe2.score:
+            winner = "It's a tie!"
+
+        #Render winner text
         myfont = pygame.font.SysFont('Courier', 45)
-        winnerPrompt = myfont.render('Winner!', False, (0, 0, 0))
+        winnerPrompt = myfont.render(winner, False, (0, 0, 0))
         winnerRect = winnerPrompt.get_rect()
         winnerRect.centerx = screen_rect.centerx
         winnerRect.bottom = restartRect.top
