@@ -135,7 +135,7 @@ class Body:
         self.gv.entities.remove(self)
         self.head.segments.remove(self)
         self.rect.centerx = self.rect.centery = -1
-        self.blitme()
+        del self
 
     # Allows segment to be printed to console
     # Prints type, last location, and global index number
@@ -187,15 +187,19 @@ class Body:
         if self.moving_down:
             self.rect.bottom = self.previous_segment.rect.top
             self.rect.centerx = self.previous_segment.rect.centerx
+            self.rect.centery = self.rect.bottom - (self.rect.height / 2)
         elif self.moving_left:
             self.rect.left = self.previous_segment.rect.right
             self.rect.centery = self.previous_segment.rect.centery
+            self.rect.centerx = self.rect.left + (self.rect.width / 2)
         elif self.moving_right:
             self.rect.right = self.previous_segment.rect.left
             self.rect.centery = self.previous_segment.rect.centery
+            self.rect.centerx = self.rect.right - (self.rect.width / 2)
         else:
             self.rect.top = self.previous_segment.rect.bottom
             self.rect.centerx = self.previous_segment.rect.centerx
+            self.rect.centery = self.rect.top + (self.rect.height / 2)
         self.lastLoc = (self.rect.centerx, self.rect.centery)
 
 

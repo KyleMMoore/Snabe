@@ -151,21 +151,21 @@ class Snabe:
             pass
 
         # snabe moves in the direction that the flags indicate
-        elif self.rect.top > self.screen_rect.top \
-                and self.rect.bottom < self.screen_rect.bottom \
-                and self.rect.left > self.screen_rect.left \
-                and self.rect.right < self.screen_rect.right:
-            if self.moving_up:
-                self.centery -= self.speed
-            if self.moving_down:
-                self.centery += self.speed
-            if self.moving_left:
-                self.centerx -= self.speed
-            if self.moving_right:
-                self.centerx += self.speed
+
+        if self.moving_up and not self.rect.top == self.screen_rect.top:
+            self.centery -= self.speed
+        if self.moving_down and not self.rect.bottom == self.screen_rect.bottom:
+            self.centery += self.speed
+        if self.moving_left and not self.rect.left == self.screen_rect.left:
+            self.centerx -= self.speed
+        if self.moving_right and not self.rect.right == self.screen_rect.right:
+            self.centerx += self.speed
 
         # Triggered when head reaches the edges of the screen
-        else:
+        elif self.rect.top == self.screen_rect.top and self.moving_up\
+                or self.rect.left == self.screen_rect.left and self.moving_left\
+                or self.rect.bottom == self.screen_rect.bottom and self.moving_down\
+                or self.rect.right == self.screen_rect.right and self.moving_right:
             self.collision("WALL")
 
     # Collisions with walls and no-damage head-on collisions with the opponent call this
@@ -279,7 +279,8 @@ class Snabe:
 
         # If player collides with a powerup wafer
         elif type(target) is Wafer:
-            self.do_powerup(target.get_type())
+            if self.isVulnerable and not self.canDamage:
+                self.do_powerup(target.get_type())
             target.destroy()
 
         # If player collides with a body segment

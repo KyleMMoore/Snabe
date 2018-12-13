@@ -92,18 +92,30 @@ class GlobalFunctions:
                 # Move up if W key is pressed
                 # Also protects against turning 180 degrees or "turning" in the direction you're currently moving
                 if event.key == pygame.K_w and not snabe1.moving_down and not snabe1.moving_up:
-                    snabe1.set_direction("UP")
+                    if snabe1.rect.top == snabe1.screen_rect.top + 1:
+                        snabe1.set_direction("DOWN")
+                    else:
+                        snabe1.set_direction("UP")
 
                 elif event.key == pygame.K_a and not snabe1.moving_right and not snabe1.moving_left:
-                    snabe1.set_direction("LEFT")
+                    if snabe1.rect.left == snabe1.screen_rect.left + 1:
+                        snabe1.set_direction("RIGHT")
+                    else:
+                        snabe1.set_direction("LEFT")
 
                 # Makes sure that this doesn't work if this is the snabe's first move
                 elif event.key == pygame.K_s and not snabe1.moving_up and not snabe1.moving_down\
                         and not snabe1.first_move():
-                    snabe1.set_direction("DOWN")
+                    if snabe1.rect.bottom == snabe1.screen_rect.bottom - 1:
+                        snabe1.set_direction("UP")
+                    else:
+                        snabe1.set_direction("DOWN")
 
                 elif event.key == pygame.K_d and not snabe1.moving_left and not snabe1.moving_right:
-                    snabe1.set_direction("RIGHT")
+                    if snabe1.rect.right == snabe1.screen_rect.right - 1:
+                        snabe1.set_direction("LEFT")
+                    else:
+                        snabe1.set_direction("RIGHT")
 
                 ############
                 # Player 2 #
@@ -116,17 +128,30 @@ class GlobalFunctions:
                         x.set_direction("UP")
 
                 if event.key == pygame.K_UP and not snabe2.moving_down and not snabe2.moving_up:
-                    snabe2.set_direction("UP")
+                    if snabe2.rect.top == snabe2.screen_rect.top + 1:
+                        snabe2.set_direction("DOWN")
+                    else:
+                        snabe2.set_direction("UP")
 
                 elif event.key == pygame.K_LEFT and not snabe2.moving_right and not snabe2.moving_left:
-                    snabe2.set_direction("LEFT")
+                    if snabe2.rect.left == snabe2.screen_rect.left + 1:
+                        snabe2.set_direction("RIGHT")
+                    else:
+                        snabe2.set_direction("LEFT")
 
                 elif event.key == pygame.K_DOWN and not snabe2.moving_up and not snabe2.moving_down \
                         and not snabe2.first_move():
-                    snabe2.set_direction("DOWN")
+                    if snabe2.rect.bottom == snabe2.screen_rect.bottom - 1:
+                        snabe2.set_direction("UP")
+                    else:
+                        snabe2.set_direction("DOWN")
 
                 elif event.key == pygame.K_RIGHT and not snabe2.moving_left and not snabe2.moving_right:
-                    snabe2.set_direction("RIGHT")
+                    if snabe2.rect.right == snabe2.screen_rect.right - 1:
+                        snabe2.set_direction("LEFT")
+                    else:
+                        snabe2.set_direction("RIGHT")
+
 
 
 

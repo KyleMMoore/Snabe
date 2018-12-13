@@ -61,6 +61,7 @@ class Wafer():
     def destroy(self):
         self.gv.wafer_list.remove(self)
         self.gv.entities.remove(self)
+        del self
 
     def __repr__(self):
         return str(type(self)) + ": " + str(self.getLocation()) + ": " + str(self.gv.entities.index(self))
