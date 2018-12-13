@@ -4,7 +4,8 @@ from food import Food
 from wafer import Wafer
 from global_toolbox import GlobalSettings
 
-class Snabe():
+
+class Snabe:
     def __init__(self, screen, global_vars, player_num):
         # Useful game elements
         self.screen = screen

@@ -2,6 +2,7 @@ import pygame
 from random import randint
 from global_toolbox import GlobalSettings
 
+
 class Wafer():
 
     def __init__(self, screen, global_vars):
@@ -58,7 +59,6 @@ class Wafer():
         self.screen.blit(self.food_sprite, self.rect)
 
     def destroy(self):
-        print(self.get_type())
         self.gv.wafer_list.remove(self)
         self.gv.entities.remove(self)
 

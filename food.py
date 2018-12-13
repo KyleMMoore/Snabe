@@ -2,6 +2,7 @@ import pygame
 from random import randint
 from global_toolbox import GlobalSettings
 
+
 class Food():
     def __init__(self, screen, global_vars):
         self.screen = screen
@@ -34,7 +35,7 @@ class Food():
 
     # Returns a tuple containing the (x, y) of the rect
     def getLocation(self):
-        return ((self.rect.centerx, self.rect.centery))
+        return (self.rect.centerx, self.rect.centery)
 
     # Displays food
     def blitme(self):

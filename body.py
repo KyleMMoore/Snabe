@@ -1,7 +1,8 @@
 import pygame
 from global_toolbox import GlobalSettings
 
-class Body():
+
+class Body:
     def __init__(self, screen, head, global_vars, segment_number):
         # Useful game elements
         self.screen = screen

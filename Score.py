@@ -1,6 +1,8 @@
 import pygame
 from Timer import Timer
 from global_toolbox import GlobalSettings
+
+
 class Score(Timer):
     def __init__(self, screen, int, side):
         self.screen = screen

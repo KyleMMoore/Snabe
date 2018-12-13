@@ -7,38 +7,41 @@ from food import Food
 from wafer import Wafer
 from Score import Score
 
+
 def run_game():
     pygame.init()
 
-    #settings/constants file
+    # Creates instances of global information classes
     snabings = GlobalSettings()
     gv = GlobalVars()
     gf = GlobalFunctions(gv)
 
+    # Sets up the display window
     screen = pygame.display.set_mode((snabings.screen_width, snabings.screen_height))
     pygame.display.set_caption("Snabe")
     pygame.display.set_icon(pygame.image.load("images/menu/snabeSlither4.png"))
 
+    # Creates an instance of the Snabe class for each player
     snabe1 = Snabe(screen, gv, 1)
     snabe2 = Snabe(screen, gv, 2)
 
-    # list of food pellets to be displayed
+    # List of food pellets to be displayed
     gv.food_list.append(Food(screen, gv))
     gv.food_list[0].setLocation(snabings.screen_width//2, snabings.screen_height//2)
 
-    # timer class object
+    # Timer class object
     game_timer = Timer(screen, snabings.game_length)
 
-    # score objects
+    # Score objects
     scoreboard = [Score(screen,snabe1.score, "LEFT"),Score(screen,snabe2.score, "RIGHT")]
 
-    #established to regulate game speed
+    # Established to regulate game speed
     clock = pygame.time.Clock()
 
-    # global tick rate established in settings.py
+    # Global tick rate established in settings.py
     tick_rate = snabings.tick_rate
 
-    # keeps track of tick counts
+    # Keeps track of tick counts
     ticks = {
         "initial": gv.timer_value,
         "timer": 0,
@@ -46,6 +49,7 @@ def run_game():
         "wafer": -1,
     }
 
+    # The game's main loop: repeats until the timer runs out, or one player loses.
     while gv.timer_value != 0 and snabe1.score != 0 and snabe2.score != 0:
         # establishes tick rate for game
         clock.tick(tick_rate)
@@ -121,6 +125,7 @@ def startScreen():
         snabe_logo = pygame.image.load(snabeSlither[snabeSlither["frame"]])
     except:
         print("Failed to load logo sprite: falling back on dummy.bmp")
+        snabe_logo = pygame.image.load("images/dummy.bmp")
     finally:
         logo_rect = snabe_logo.get_rect()
         logo_rect.right = screen_rect.left

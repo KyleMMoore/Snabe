@@ -1,8 +1,7 @@
 import pygame
-import sys
 
 
-class Timer():
+class Timer:
     def __init__(self, screen, int):
         self.screen = screen
         self.screen_rect = screen.get_rect()
