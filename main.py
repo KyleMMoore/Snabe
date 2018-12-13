@@ -204,7 +204,7 @@ def endScreen(snabe1, snabe2):
 
         #render play again prompy
         myfont = pygame.font.SysFont('Courier', 30)
-        restartPrompt = myfont.render('Game over! Press Space to Play Again!', False, (0, 0, 0))
+        restartPrompt = myfont.render('Press Space to Play Again!', False, (0, 0, 0))
         restartRect = restartPrompt.get_rect()
         restartRect.centerx = screen_rect.centerx
         restartRect.centery = screen_rect.centery
