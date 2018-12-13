@@ -29,7 +29,7 @@ class GlobalSettings:
         # MAX GAME LENGTH IS 99, ANYTHING HIGHER IS SET TO 99
         # Minimum playable game time is 1, anything lower and the game goes straight to end menu
         self.tick_rate = 150
-        self.game_length = 60
+        self.game_length = 5
 
         #constants to determine spawn rates (per n seconds)
         self.food_spawn_rate = 1
