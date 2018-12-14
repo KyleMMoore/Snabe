@@ -11,11 +11,11 @@ class Score(Timer):
         leftDigit_loc = [0, GlobalSettings().play_area_height + -10]
         rightDigit_loc = [0, GlobalSettings().play_area_height + -10]
         if(side == "LEFT"):
-            leftDigit_loc[0] = self.screen_rect.left
-            rightDigit_loc[0] = self.screen_rect.left + 30
+            leftDigit_loc[0] = self.screen_rect.left + 15
+            rightDigit_loc[0] = leftDigit_loc[0] + 30
         elif(side == "RIGHT"):
-            leftDigit_loc[0] = self.screen_rect.right - 60
-            rightDigit_loc[0] = self.screen_rect.right - 30
+            rightDigit_loc[0] = self.screen_rect.right - 45
+            leftDigit_loc[0] = rightDigit_loc[0] - 30
 
         if int > 99:
             self.time = 99

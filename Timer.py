@@ -1,5 +1,5 @@
 import pygame
-
+from global_toolbox import GlobalSettings
 
 class Timer:
     def __init__(self, screen, int):
@@ -23,7 +23,7 @@ class Timer:
             self.rect = self.timer_body.get_rect()
 
         self.rect.centerx = self.screen_rect.centerx
-        self.rect.top = self.screen_rect.top
+        self.rect.bottom = GlobalSettings().play_area_height
 
         # load image and rect for left digit
         try:
@@ -35,8 +35,8 @@ class Timer:
             self.left_digit_rect = self.left_digit.get_rect()
 
         # offset the digit to the left side of timer
-        self.left_digit_rect.centerx = self.screen_rect.centerx - 15
-        self.left_digit_rect.top = self.screen_rect.top + 32
+        self.left_digit_rect.centerx = self.rect.centerx - 15
+        self.left_digit_rect.bottom = GlobalSettings().play_area_height -10 #self.rect.top + 32
 
         # load image and rect for right digit
         try:
@@ -48,8 +48,8 @@ class Timer:
             self.right_digit_rect = self.right_digit.get_rect()
 
         # offset the digit to the right side of timer
-        self.right_digit_rect.centerx = self.screen_rect.centerx + 15
-        self.right_digit_rect.top = self.screen_rect.top + 32
+        self.right_digit_rect.centerx = self.rect.centerx + 15
+        self.right_digit_rect.bottom = GlobalSettings().play_area_height -10 #self.rect.top + 32
         self.tick()
 
     # updates timer image to given time
@@ -103,6 +103,6 @@ class Timer:
 
     # render image on screen
     def blitme(self):
-        self.screen.blit(self.timer_body, self.rect)
+        #self.screen.blit(self.timer_body, self.rect)
         self.screen.blit(self.left_digit, self.left_digit_rect)
         self.screen.blit(self.right_digit, self.right_digit_rect)
