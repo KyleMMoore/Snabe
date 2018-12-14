@@ -148,7 +148,7 @@ class Snabe:
     #################
     def move(self):
         if self.stunned:
-            pass
+            return 0
 
         # snabe moves in the direction that the flags indicate
 
