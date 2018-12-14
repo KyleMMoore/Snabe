@@ -17,10 +17,17 @@ class GlobalSettings:
         self.screen_height = 800
         self.background_color = (255, 255, 255)
 
+        # max height a player can travel and
+        # max height for spawnables
         self.play_area_height = 140
 
+        # image/rect for background of main game
         self.background_image = pygame.image.load("images/background/background.png")
         self.background_rect = self.background_image.get_rect()
+
+        # image/rect for background of title and end screen
+        self.background_title = pygame.image.load("images/background/title_background.png")
+        self.background_title_rect = self.background_title.get_rect()
 
         #snabe speed
         self.base_speed = 1
@@ -29,7 +36,7 @@ class GlobalSettings:
         # MAX GAME LENGTH IS 99, ANYTHING HIGHER IS SET TO 99
         # Minimum playable game time is 1, anything lower and the game goes straight to end menu
         self.tick_rate = 150
-        self.game_length = 30
+        self.game_length = 5
 
         #constants to determine spawn rates (per n seconds)
         self.food_spawn_rate = 1
@@ -61,14 +68,22 @@ class GlobalFunctions:
 
     # Keeps things drawn on the screen
     def update_screen(self, screen, timer, scoreboard):
-        screen.fill(self.snabings.background_color)
+
+        #blits the background image to the screen
         screen.blit(self.snabings.background_image,self.snabings.background_rect)
+
+        #blits timer to screen
         timer.blitme()
+
+        #blits each player score to screen
         for a in scoreboard:
             a.blitme()
+
+        #blits snabes, wafers, and pellets to screen
         for x in self.gv.entities:
             x.blitme()
 
+        #updates display after making changes
         pygame.display.flip()
 
     def check_events(self, snabe1, snabe2):

@@ -104,7 +104,6 @@ def startScreen():
     screen = pygame.display.set_mode((snabings.screen_width, snabings.screen_height))
     screen_rect = screen.get_rect()
     pygame.display.set_caption("Snabe")
-    screen.fill(snabings.background_color)
 
     #used to regulate the animation speed
     clock = pygame.time.Clock()
@@ -134,7 +133,7 @@ def startScreen():
     while True:
         #sets gamespeed(animation speed) to 14 FPS
         clock.tick(14)
-        screen.fill(snabings.background_color)
+        screen.blit(GlobalSettings().background_title, GlobalSettings().background_title_rect)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
@@ -183,11 +182,11 @@ def endScreen(snabe1, snabe2):
     screen = pygame.display.set_mode((snabings.screen_width, snabings.screen_height))
     screen_rect = screen.get_rect()
     pygame.display.set_caption("Snabe")
-    screen.fill(snabings.background_color)
     pygame.display.flip()
 
     while True:
-        screen.fill(snabings.background_color)
+        screen.blit(GlobalSettings().background_title, GlobalSettings().background_title_rect)
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
