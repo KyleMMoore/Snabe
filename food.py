@@ -45,6 +45,7 @@ class Food():
     def destroy(self):
         self.gv.food_list.remove(self)
         self.gv.entities.remove(self)
+        del self
 
     # String rep of object
     def __repr__(self):
